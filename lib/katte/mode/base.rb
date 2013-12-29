@@ -27,7 +27,7 @@ module Katte::Mode
           while line = io.gets
             line.chomp!
             break unless line =~ comment_pattern
-            next unless line =~ directive_pattern
+            next  unless line =~ directive_pattern
 
             key, value = parse_directive(line)
 
