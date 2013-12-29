@@ -1,21 +1,25 @@
 class Katte
   class Node
     attr_reader :name
-    attr_reader :klass
+    attr_reader :path
+    attr_reader :command
+    attr_reader :period
     attr_reader :options
 
-    def initialize(name, klass, options)
-      @name  = name
-      @klass = klass
-      @options = options
+    def initialize(params)
+      @name    = params[:name]
+      @path    = params[:path]
+      @command = params[:command]
+      @period  = params[:period]
+      @options = params[:options] || {}
     end
 
     def parents
-      options['require'] || []
+      @options['require'] || []
     end
 
     def execute
-      @klass.execute(@name, @options)
+      @command.execute(@name, @options)
     end
   end
 end

@@ -6,9 +6,9 @@ class Katte
   describe DependencyGraph do
     before :all do
       @nodes = []
-      @nodes << Node.new("a", nil, 'require' => ["b", "c"])
-      @nodes << Node.new("b", nil, {})
-      @nodes << Node.new("c", nil, {})
+      @nodes << Node.new(name: "a", options: {'require' => ["b", "c"]})
+      @nodes << Node.new(name: "b", options: {})
+      @nodes << Node.new(name: "c", options: {})
     end
 
     it 'build dependency graph of nodes' do
