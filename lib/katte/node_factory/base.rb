@@ -1,6 +1,6 @@
 require 'katte/node'
 
-module Katte::Mode
+module Katte::NodeFactory
   class Base
     class << self
       def execute

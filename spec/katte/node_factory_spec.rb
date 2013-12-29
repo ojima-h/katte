@@ -1,9 +1,9 @@
 require 'spec_helper'
 require 'stringio'
 
-require 'katte/mode/base'
+require 'katte/node_factory/base'
 
-module Katte::Mode
+module Katte::NodeFactory
   describe Base do
     before :all do
       @sample_recipe = 'sample.day.sh'
