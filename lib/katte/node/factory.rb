@@ -1,8 +1,8 @@
 require 'pathname'
 require 'katte/node'
 
-module Katte::Node::Factory
-  class Base
+class Katte::Node
+  class Factory
     class << self
       def create(path)
         node_info = parse_path(path)
