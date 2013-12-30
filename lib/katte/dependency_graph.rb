@@ -13,7 +13,7 @@ class Katte
     end
 
     def empty?
-      @node.nil? || @nodes.empty?
+      @nodes.nil? || @nodes.empty?
     end
 
     def done(node)
