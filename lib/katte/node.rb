@@ -7,6 +7,7 @@ class Katte
     attr_reader :options
 
     def initialize(params)
+      @params  = params
       @name    = params[:name]
       @path    = params[:path]
       @command = params[:command]
@@ -19,7 +20,15 @@ class Katte
     end
 
     def execute
-      @command.execute(@name, @options)
+      unless @command
+        Katte.logger.error("no command specified for %s" % @name)
+        return
+      end
+
+      @command.execute(@params)
     end
   end
 end
+
+
+

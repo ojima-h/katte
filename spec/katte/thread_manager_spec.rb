@@ -1,12 +1,14 @@
 require 'spec_helper'
+require 'logger'
+require 'stringio'
+
 require 'katte/thread_manager'
 
 class Katte
   describe ThreadManager do
     class Spy
       attr_reader :num_called
-      def initialize(thread_manager)
-        @thread_manager = thread_manager
+      def initialize
         @num_called     = 0
         @mutex          = Mutex.new
       end
@@ -17,24 +19,31 @@ class Katte
 
     it "execute procedures concurrently" do
       thread_manager = ThreadManager.new
-      spy = Spy.new(thread_manager)
+      spy = Spy.new
 
       threads = thread_manager.run
       4.times { thread_manager.push { spy.call } }
-      sleep 0.2
+      sleep 0.1
 
-      expect(spy.num_called).to equal(4)
+      expect(spy.num_called).to eq 4
     end
 
     it "ignores all exceptions" do
-      thread_manager = ThreadManager.new
-      spy = Spy.new(thread_manager)
+      logio = StringIO.new
+      logger = Logger.new(logio)
+
+      thread_manager = ThreadManager.new(4, logger)
+      spy = Spy.new
 
       threads = thread_manager.run
-      4.times { thread_manager.push { raise :error } }
-      sleep 0.2
+      4.times { thread_manager.push { raise "Test thread_manager_spec" } }
+      sleep 0.1
 
-      expect(threads.count(&:alive?)).to equal(4)
+      expect(threads.count(&:alive?)).to eq 4
+
+      logio.rewind
+      logstr = logio.readlines.join
+      expect(logstr).to match(/Test thread_manager_spec/)
     end
 
     describe "#stop" do
@@ -42,8 +51,8 @@ class Katte
         thread_manager = ThreadManager.new
 
         threads = thread_manager.run
-        3.times { thread_manager.push { sleep -1 } }
-        Thread.start { sleep 0.2; thread_manager.stop }
+        3.times { thread_manager.push { sleep } }
+        Thread.start { sleep 0.1; thread_manager.stop }
         threads.each &:join
       end
     end

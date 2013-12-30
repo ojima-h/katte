@@ -30,8 +30,9 @@ class Katte::Node
       end
 
       def load_options(path, command)
-        comment_pattern   = /^#{command.comment_leading_chr}|^\s*$/
-        directive_pattern = /^#{command.comment_leading_chr}\s*(?<key>\w+)\s*(?<value>.+)$/
+        leading_chr = command.respond_to?(:comment_leading_chr) ? command.comment_leading_chr : '#'
+        comment_pattern   = /^#{leading_chr}|^\s*$/
+        directive_pattern = /^#{leading_chr}\s*(?<key>\w+)\s*(?<value>.+)$/
 
         options = {}
         open(path) do |io|

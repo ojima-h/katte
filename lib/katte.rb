@@ -1,3 +1,4 @@
+require 'logger'
 require 'katte/config'
 require 'katte/command/shell'
 
@@ -11,6 +12,10 @@ class Katte
     when 'sh' then Command::Shell
     else nil
     end
+  end
+
+  def self.logger
+    @logger ||= Logger.new(STDOUT)
   end
 
   def self.run

@@ -21,13 +21,13 @@ class Katte
       expect(root_nodes_names).to include "b"
       expect(root_nodes_names).to include "c"
 
-      next_nodes = dependency_graph.done("b")
+      next_nodes = dependency_graph.done(@nodes[1])
       expect(next_nodes).to be_empty
 
-      next_nodes = dependency_graph.done("c")
+      next_nodes = dependency_graph.done(@nodes[2])
       expect(next_nodes.map(&:name)).to eq ["a"]
 
-      next_nodes = dependency_graph.done("a")
+      next_nodes = dependency_graph.done(@nodes[0])
       expect(next_nodes).to be_nil
     end
   end

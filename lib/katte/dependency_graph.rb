@@ -12,13 +12,13 @@ class Katte
       @root_nodes
     end
 
-    def done(node_name)
+    def done(node)
       @mutex.synchronize {
-        @nodes.delete(node_name)
+        @nodes.delete(node.name)
 
         return nil if @nodes.empty?
 
-        children = @dependency.delete(node_name)
+        children = @dependency.delete(node.name)
         return []  if children.nil?
 
         children.map {|child|
