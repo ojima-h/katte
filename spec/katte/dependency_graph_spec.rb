@@ -30,5 +30,20 @@ class Katte
       next_nodes = dependency_graph.done(@nodes[0])
       expect(next_nodes).to be_nil
     end
+
+    it "remove broken dependency" do
+      pending
+      broken_node = Node.new(name: 'd', options: {'require' => ['dummy']})
+
+      graph = DependencyGraph.new(@nodes + [broken_node])
+      expect(graph.nodes.keys).not_to include 'd'
+    end
+    it "raise error when cyclic dependency given" do
+      pending
+      nodes = [ Node.new(name: 'a', options: {'require' => ['b']}),
+                Node.new(name: 'b', options: {'require' => ['a']}) ]
+
+      expect { DependencyGraph.new(nodes) }.to raise_error
+    end
   end
 end

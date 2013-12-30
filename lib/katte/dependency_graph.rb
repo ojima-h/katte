@@ -2,6 +2,7 @@ require 'katte/node'
 
 class Katte
   class DependencyGraph
+    attr_reader :nodes
     def initialize(nodes)
       build(nodes)
 
