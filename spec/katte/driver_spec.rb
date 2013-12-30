@@ -9,7 +9,7 @@ class Katte
   describe Driver do
     before :all do
       @call_log = []
-      callback = Proc.new {|params| @call_log << params[:name]}
+      callback = Proc.new {|node| @call_log << node.name}
 
       @nodes = []
       @nodes << Node.new(name: 'test_1', command: Katte::Command::Test, options: {'callback' => [callback]})

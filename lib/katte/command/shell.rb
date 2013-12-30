@@ -1,12 +1,5 @@
-class Katte::Command
-  class Shell
-    class << self
-      def execute(options)
-      end
+require 'katte/command/simple'
 
-      def comment_leading_chr
-        '#'
-      end
-    end
-  end
+class Katte::Command
+  class Shell < Simple; end
 end
