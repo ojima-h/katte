@@ -5,6 +5,7 @@ class Katte::Node
   class Factory
     class << self
       def create(path)
+        return nil unless FileTest.file? path
         node_info = parse_path(path)
         return nil if node_info.nil?
 

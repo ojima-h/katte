@@ -13,7 +13,7 @@ class Katte::Node
     describe ".create" do
       it "returns node object" do
         node = Factory.create(@sample_recipe)
-        expect(node.parents).to include('parent')
+        expect(node.parents).to include('test/sample/sub')
         expect(node.name).to eq 'test/sample'
         expect(node.command).to eq Katte::Command::Shell
         expect(node.period).to eq 'day'

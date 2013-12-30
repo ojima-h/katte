@@ -12,6 +12,10 @@ class Katte
       @root_nodes
     end
 
+    def empty?
+      @node.nil? || @nodes.empty?
+    end
+
     def done(node)
       @mutex.synchronize {
         @nodes.delete(node.name)

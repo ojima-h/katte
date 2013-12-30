@@ -1,5 +1,11 @@
+require 'find'
 require 'logger'
 require 'katte/config'
+require 'katte/debug'
+require 'katte/node/factory'
+require 'katte/node'
+require 'katte/driver'
+require 'katte/dependency_graph'
 require 'katte/command/shell'
 
 class Katte
@@ -17,13 +23,21 @@ class Katte
   def self.logger
     @logger ||= Logger.new(STDOUT)
   end
+  def self.debug
+    return unless config.env == 'test'
+    @debug ||= Debug.new
+  end
 
   def self.run
-    nodes = []
-    Find.find(@config.recipes_root) do |f|
-      name = Pathname.new(f).relative_path_from(@config.recipes_root)
+    nodes = [].tap {|x|
+      Find.find(config.recipes_root) do |path|
+        x << Node::Factory.create(path)
+      end
+    }.compact!
 
-      nodes << Node::Factory::Base.create(name)
-    end
+    dependency_graph = DependencyGraph.new(nodes)
+    driver           = Driver.new(dependency_graph)
+
+    driver.run
   end
 end

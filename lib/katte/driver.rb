@@ -26,6 +26,7 @@ class Katte
     end
 
     def run
+      return if @dependency_graph.empty?
       execute_nodes(@dependency_graph.root)
       @thread_manager.join
     end
