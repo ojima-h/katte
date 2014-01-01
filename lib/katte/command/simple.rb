@@ -2,6 +2,7 @@ class Katte::Command
   class Simple
     class << self
       def execute(options)
+        true
       end
 
       def comment_leading_chr
@@ -10,8 +11,8 @@ class Katte::Command
 
       def run(node, thread_manager, &callback)
         thread_manager.push {
-          execute(node)
-          callback.call(node)
+          result = execute(node)
+          callback.call(node, result)
         }
       end
     end

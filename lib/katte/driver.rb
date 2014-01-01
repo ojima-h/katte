@@ -14,13 +14,18 @@ class Katte
     end
 
     def callback
-      @callback ||= Proc.new {|node|
-        next_nodes = @dependency_graph.done(node)
+      @callback ||= Proc.new {|node, result|
+        if result
+          next_nodes = @dependency_graph.done(node)
 
-        if next_nodes.nil?
-          @thread_manager.stop
+          if next_nodes.nil?
+            @thread_manager.stop
+          else
+            execute_nodes(next_nodes)
+          end
         else
-          execute_nodes(next_nodes)
+          @dependency_graph.fail(node)
+          @thread_manager.stop if @dependency_graph.nodes.empty?
         end
       }
     end
