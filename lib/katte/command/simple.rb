@@ -9,10 +9,15 @@ class Katte::Command
         '#'
       end
 
-      def run(node, thread_manager, &callback)
+      def run(node, thread_manager, driver)
         thread_manager.push {
           result = execute(node)
-          callback.call(node, result)
+
+          if result
+            driver.done(node)
+          else
+            driver.fail(node)
+          end
         }
       end
     end

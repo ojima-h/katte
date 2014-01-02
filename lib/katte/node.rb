@@ -19,13 +19,13 @@ class Katte
       @options['require'] || []
     end
 
-    def run(thread_manager, &callback)
+    def run(thread_manager, driver)
       unless @command
         Katte.logger.error("no command specified for %s" % @name)
         return
       end
 
-      @command.run(self, thread_manager, &callback)
+      @command.run(self, thread_manager, driver)
     end
   end
 end

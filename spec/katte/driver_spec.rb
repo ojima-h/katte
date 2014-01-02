@@ -41,7 +41,6 @@ class Katte
                 Node.new(name: 'test_3',
                          command: Katte::Command::Test,
                          options: {
-                           'require' => ['test_1'],
                            'callback' => [Proc.new{|node| call_log << node.name}],
                          }),
               ]
@@ -49,7 +48,7 @@ class Katte
       driver = Driver.new(graph)
       driver.run
 
-      expect(call_log).not_to include("test_2")
+      expect(call_log).to eq ["test_3"]
     end
   end
 end

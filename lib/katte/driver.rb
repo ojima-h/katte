@@ -10,28 +10,23 @@ class Katte
     end
 
     def execute_nodes(nodes)
-      nodes.each {|node| node.run(@thread_manager, &callback) }
+      nodes.each {|node| node.run(@thread_manager, self) }
     end
 
-    def callback
-      @callback ||= Proc.new {|node, result|
-        if result
-          next_nodes = @dependency_graph.done(node)
+    def done(node)
+      next_nodes = @dependency_graph.done(node)
+      return @thread_manager.stop if next_nodes.nil?
 
-          if next_nodes.nil?
-            @thread_manager.stop
-          else
-            execute_nodes(next_nodes)
-          end
-        else
-          @dependency_graph.fail(node)
-          @thread_manager.stop if @dependency_graph.nodes.empty?
-        end
-      }
+      execute_nodes(next_nodes)
+    end
+    def fail(node)
+      @dependency_graph.fail(node)
+      @thread_manager.stop if @dependency_graph.nodes.empty?
     end
 
     def run
       return if @dependency_graph.empty?
+
       execute_nodes(@dependency_graph.root)
       @thread_manager.join
     end
