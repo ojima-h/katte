@@ -5,18 +5,11 @@ class Katte
     attr_reader :threads
     def initialize(threads_num = 4, logger = Katte.logger)
       @queue         = Queue.new
-      @message_queue = Queue.new
       @threads_num   = threads_num
       @logger        = logger
     end
 
     def run
-      @master_thread ||= Thread.start {
-        case @message_queue.pop
-        when :exit then @threads.each &:kill
-        end
-      }
-
       procedure = Proc.new {
         loop {
           begin
@@ -34,7 +27,7 @@ class Katte
     end
 
     def stop
-      @message_queue.push :exit
+      @threads.each &:kill
     end
 
     def join

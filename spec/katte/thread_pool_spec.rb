@@ -45,16 +45,5 @@ class Katte
       logstr = logio.readlines.join
       expect(logstr).to match(/Test thread_pool_spec/)
     end
-
-    describe "#stop" do
-      it "kills all threads" do
-        thread_pool = ThreadPool.new
-
-        threads = thread_pool.run
-        3.times { thread_pool.push { sleep } }
-        Thread.start { sleep 0.1; thread_pool.stop }
-        threads.each &:join
-      end
-    end
   end
 end
