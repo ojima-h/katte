@@ -26,11 +26,7 @@ class Katte
         return
       end
 
-      @thread.run do
-        result = @command.execute(self)
-
-        result ? driver.done(self) : driver.fail(self)
-      end
+      @thread.run(self, driver)
     end
   end
 end

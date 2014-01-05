@@ -6,13 +6,17 @@ class Katte
         @instance ||= self.new
       end
 
+      def run(node, driver)
+        @thread_pool.push {
+          result = node.command.execute(node)
+          result ? driver.done(node) : driver.fail(node)
+        }
+      end
+
+      private
       def initialize
         @thread_pool = ThreadPool.new
         @thread_pool.run
-      end
-
-      def run
-        @thread_pool.push { yield }
       end
     end
   end
