@@ -5,8 +5,6 @@ class Katte
     attr_reader :nodes
     def initialize(nodes)
       build(nodes)
-
-      @mutex = Mutex.new
     end
 
     def root
@@ -18,10 +16,25 @@ class Katte
     end
 
     def done(node)
-      @mutex.synchronize { _done(node) }
+      @nodes.delete(node.name)
+
+      return nil if @nodes.empty?
+
+      children = @dependency.delete(node.name)
+      return [] if children.nil?
+
+      children.map {|child|
+        @parents_count[child] -= 1
+
+        next if @parents_count[child] > 0
+
+        @parents_count.delete(child)
+        @nodes[child]
+      }.compact
     end
+
     def fail(node)
-      @mutex.synchronize { _delete(node.name) }
+      delete(node.name)
     end
 
     private
@@ -49,31 +62,14 @@ class Katte
       end
     end
 
-    def _done(node)
-      @nodes.delete(node.name)
-
-      return nil if @nodes.empty?
-
-      children = @dependency.delete(node.name)
-      return [] if children.nil?
-
-      children.map {|child|
-        @parents_count[child] -= 1
-
-        next if @parents_count[child] > 0
-
-        @parents_count.delete(child)
-        @nodes[child]
-      }.compact
-    end
-
-    def _delete(node_name)
+    def delete(node_name)
       @nodes.delete(node_name)
       @parents_count.delete(node_name)
       children = @dependency.delete(node_name)
 
       return if children.nil?
-      children.each {|child| _delete(child) }
+      children.each {|child| delete(child) }
     end
   end
 end
+

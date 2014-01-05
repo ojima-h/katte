@@ -47,6 +47,7 @@ class Katte
               ]
       graph = DependencyGraph.new(nodes)
       driver = Driver.new(graph)
+
       driver.run
 
       expect(call_log).to eq ["test_3"]
