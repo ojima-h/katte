@@ -10,7 +10,7 @@ class Katte::Command
       Katte.debug.out = @out_w
 
       @node = Katte::Node.new(:name => 'test/sample',
-                              :path => File.expand_path('../../recipes/test/sample.day.sh', __FILE__))
+                              :path => File.expand_path('../../recipes/test/sample.sh', __FILE__))
     end
     after :all do
       [@out_r, @out_w].each &:close

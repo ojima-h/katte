@@ -9,7 +9,7 @@ class Katte
       @thread_manager.run
     end
 
-    def execute_nodes(nodes)
+    def run_nodes(nodes)
       nodes.each {|node| node.run(@thread_manager, self) }
     end
 
@@ -17,7 +17,7 @@ class Katte
       next_nodes = @dependency_graph.done(node)
       return @thread_manager.stop if next_nodes.nil?
 
-      execute_nodes(next_nodes)
+      run_nodes(next_nodes)
     end
     def fail(node)
       @dependency_graph.fail(node)
@@ -27,7 +27,7 @@ class Katte
     def run
       return if @dependency_graph.empty?
 
-      execute_nodes(@dependency_graph.root)
+      run_nodes(@dependency_graph.root)
       @thread_manager.join
     end
   end

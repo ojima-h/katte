@@ -7,16 +7,30 @@ require 'katte/node'
 require 'katte/driver'
 require 'katte/dependency_graph'
 require 'katte/command/shell'
+require 'katte/file_type/default'
+require 'katte/thread_manager/default'
 
 class Katte
   def self.config
     @config ||= Katte::Config.new
   end
 
-  def self.command_map(extname)
+  def self.command(extname)
     case extname
     when 'sh' then Command::Shell
     else nil
+    end
+  end
+  def self.file_type(extname)
+    case extname
+    when 'sh' then FileType::Default
+    else FileType::Default
+    end
+  end
+  def self.thread(thread_type)
+    case thread_type
+    when 'default' then ThreadManager::Default
+    else ThreadManager::Default
     end
   end
 

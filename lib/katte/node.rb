@@ -11,7 +11,8 @@ class Katte
       @name    = params[:name]
       @path    = params[:path]
       @command = params[:command]
-      @period  = params[:period]
+      @period  = params[:period]  || 'day'
+      @thread  = params[:thread]  || Katte::ThreadManager::Default
       @options = params[:options] || {}
     end
 
@@ -24,8 +25,16 @@ class Katte
         Katte.logger.error("no command specified for %s" % @name)
         return
       end
+      unless @thread
+        Katte.logger.error("no thread type specified for %s" % @name)
+        return
+      end
 
-      @command.run(self, thread_manager, driver)
+      @thread.run(thread_manager) do
+        result = @command.execute(self)
+
+        result ? driver.done(self) : driver.fail(self)
+      end
     end
   end
 end
