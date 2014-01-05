@@ -24,15 +24,6 @@ class Katte
       @mutex.synchronize { _delete(node.name) }
     end
 
-    def descendants(nodes)
-      next_nodes = nodes.map(&:name)
-      descendant_nodes = []
-      loop {
-        next_nodes = next_nodes.map{|n| @dependency[n]}.flatten.compact
-        descendant_nodes.append
-      }
-    end
-
     private
     def build(nodes)
       @nodes = {}

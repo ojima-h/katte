@@ -18,6 +18,7 @@ class Katte
 
       @graph = DependencyGraph.new(@nodes)
     end
+
     it 'excecute each node according to dependency graph' do
       driver = Driver.new(@graph)
       driver.run

@@ -1,7 +1,7 @@
 require 'thread'
 
 class Katte
-  class ThreadManager
+  class ThreadPool
     attr_reader :threads
     def initialize(threads_num = 4, logger = Katte.logger)
       @queue         = Queue.new

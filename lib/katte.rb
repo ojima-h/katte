@@ -29,8 +29,8 @@ class Katte
   end
   def self.thread(thread_type)
     case thread_type
-    when 'default' then ThreadManager::Default
-    else ThreadManager::Default
+    when 'default' then ThreadManager::Default.instance
+    else ThreadManager::Default.instance
     end
   end
 

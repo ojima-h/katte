@@ -2,10 +2,10 @@ require 'spec_helper'
 require 'logger'
 require 'stringio'
 
-require 'katte/thread_manager'
+require 'katte/thread_pool'
 
 class Katte
-  describe ThreadManager do
+  describe ThreadPool do
     class Spy
       attr_reader :num_called
       def initialize
@@ -18,11 +18,11 @@ class Katte
     end
 
     it "execute procedures concurrently" do
-      thread_manager = ThreadManager.new
+      thread_pool = ThreadPool.new
       spy = Spy.new
 
-      threads = thread_manager.run
-      4.times { thread_manager.push { spy.call } }
+      threads = thread_pool.run
+      4.times { thread_pool.push { spy.call } }
       sleep 0.1
 
       expect(spy.num_called).to eq 4
@@ -32,27 +32,27 @@ class Katte
       logio = StringIO.new
       logger = Logger.new(logio)
 
-      thread_manager = ThreadManager.new(4, logger)
+      thread_pool = ThreadPool.new(4, logger)
       spy = Spy.new
 
-      threads = thread_manager.run
-      4.times { thread_manager.push { raise "Test thread_manager_spec" } }
+      threads = thread_pool.run
+      4.times { thread_pool.push { raise "Test thread_pool_spec" } }
       sleep 0.1
 
       expect(threads.count(&:alive?)).to eq 4
 
       logio.rewind
       logstr = logio.readlines.join
-      expect(logstr).to match(/Test thread_manager_spec/)
+      expect(logstr).to match(/Test thread_pool_spec/)
     end
 
     describe "#stop" do
       it "kills all threads" do
-        thread_manager = ThreadManager.new
+        thread_pool = ThreadPool.new
 
-        threads = thread_manager.run
-        3.times { thread_manager.push { sleep } }
-        Thread.start { sleep 0.1; thread_manager.stop }
+        threads = thread_pool.run
+        3.times { thread_pool.push { sleep } }
+        Thread.start { sleep 0.1; thread_pool.stop }
         threads.each &:join
       end
     end
