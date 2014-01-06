@@ -2,17 +2,17 @@ require 'yaml'
 
 class Katte
   class Config
-    attr_reader :env
+    attr_reader :mode
 
     def initialize
-      @env    = ENV['KATTE_ENV'] || 'test'
+      @mode    = ENV['KATTE_MODE'] || 'test'
       @config = {}
 
       config_file = File.join(APP_PATH, 'config.yaml')
       return unless FileTest.exists? config_file
 
       yaml = YAML.load_file(config_file)
-      @config = yaml[@env]
+      @config = yaml[@mode]
     end
 
     def recipes_root

@@ -32,7 +32,7 @@ class Katte
     @logger ||= Logger.new(STDOUT)
   end
   def self.debug
-    return unless config.env == 'test'
+    return unless config.mode == 'test'
     @debug ||= Debug.new
   end
 
