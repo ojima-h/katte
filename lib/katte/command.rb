@@ -14,5 +14,13 @@ class Katte
         yield out, err
       end
     end
+
+    def self.simple(node, program, *args)
+      self.open(node) {|out, err|
+        pid = spawn(Katte.env.to_hash, program, *args, :out => out, :err => err)
+        _, status = Process.waitpid2(pid)
+        return status.success?
+      }
+    end
   end
 end
