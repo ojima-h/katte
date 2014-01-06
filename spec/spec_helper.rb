@@ -1,4 +1,6 @@
 require 'rspec'
+require 'debugger'
+
 require 'katte'
 
 ENV['KATTE_ENV'] = 'test'

@@ -6,7 +6,7 @@ class Katte
       @queue = Queue.new
     end
 
-    %w(done fail finish).each do |method|
+    %w(done fail next finish).each do |method|
       define_method(method) do |*args|
         @queue.push [:"_#{method}", *args]
       end
@@ -30,15 +30,19 @@ class Katte
       nodes.each {|node| node.run(self) }
     end
 
-    def _done(node)
+    def _done(node, *args)
       next_nodes = @dependency_graph.done(node)
       return finish if @dependency_graph.empty?
 
       run_nodes(next_nodes) unless next_nodes.nil?
     end
-    def _fail(node)
+    def _fail(node, *args)
       @dependency_graph.fail(node)
       finish if @dependency_graph.empty?
+    end
+    def _next(node, tag, *args)
+      next_nodes = @dependency_graph.next(node, tag)
+      run_nodes(next_nodes) unless next_nodes.nil?
     end
   end
 end

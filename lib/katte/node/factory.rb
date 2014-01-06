@@ -1,5 +1,8 @@
 require 'pathname'
 require 'katte/node'
+require 'katte/thread_manager/default'
+require 'katte/thread_manager/sleeper'
+require 'katte/command/custom'
 
 class Katte::Node
   class Factory
@@ -15,14 +18,22 @@ class Katte::Node
         command   = Katte.command(ext)
 
         options = file_type.load_options(path)
-        thread  = Katte.thread(options.delete('thread'))
 
-        Katte::Node.new(:name    => name,
-                        :path    => path,
-                        :command => command,
-                        :period  => options.delete('period'),
-                        :thread  => thread,
-                        :options => options)
+        params = {
+          :name    => name,
+          :path    => path,
+          :command => command,
+          :period  => options.delete('period'),
+          :thread  => Katte::ThreadManager::Default.instance,
+          :options => options,
+        }
+
+        if options['custom']
+          params[:thread]  = Katte::ThreadManager::Sleeper.instance
+          params[:command] = Katte::Command::Custom
+        end
+
+        Katte::Node.new params
       end
 
       def parse_path(path)

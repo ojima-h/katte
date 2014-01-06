@@ -1,3 +1,5 @@
+require 'katte/command'
+
 class Katte::Command
   class Shell
     def self.execute(node)

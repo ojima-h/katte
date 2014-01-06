@@ -8,7 +8,6 @@ require 'katte/driver'
 require 'katte/dependency_graph'
 require 'katte/command/shell'
 require 'katte/file_type/default'
-require 'katte/thread_manager/default'
 
 class Katte
   def self.config
@@ -25,12 +24,6 @@ class Katte
     case extname
     when 'sh' then FileType::Default
     else FileType::Default
-    end
-  end
-  def self.thread(thread_type)
-    case thread_type
-    when 'default' then ThreadManager::Default.instance
-    else ThreadManager::Default.instance
     end
   end
 

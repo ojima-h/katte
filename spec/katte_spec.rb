@@ -20,7 +20,9 @@ describe Katte do
       t.exit
 
       today = Date.today.strftime("%Y-%m-%d")
-      expect(result).to eq ["#{today}\n", "0\n"]
+      ["#{today}\n", "0\n", "custom:1\n", "custom:2\n"].all? do |line|
+        expect(result).to include line
+      end
     end
   end
 end

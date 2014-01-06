@@ -16,25 +16,15 @@ class Katte
     end
 
     def done(node)
-      @nodes.delete(node.name)
-
-      return nil if @nodes.empty?
-
-      children = @dependency.delete(node.name)
-      return [] if children.nil?
-
-      children.map {|child|
-        @parents_count[child] -= 1
-
-        next if @parents_count[child] > 0
-
-        @parents_count.delete(child)
-        @nodes[child]
-      }.compact
+      pop(node.name)
     end
 
     def fail(node)
       delete(node.name)
+    end
+
+    def next(node, tag)
+      pop(node.name + ':' + tag.to_s)
     end
 
     private
@@ -62,6 +52,24 @@ class Katte
       end
     end
 
+    def pop(node_name)
+      @nodes.delete(node_name)
+
+      return nil if @nodes.empty?
+
+      children = @dependency.delete(node_name)
+      return [] if children.nil?
+
+      children.map {|child|
+        @parents_count[child] -= 1
+
+        next if @parents_count[child] > 0
+
+        @parents_count.delete(child)
+        @nodes[child]
+      }.compact
+    end
+
     def delete(node_name)
       @nodes.delete(node_name)
       @parents_count.delete(node_name)
@@ -72,4 +80,3 @@ class Katte
     end
   end
 end
-
