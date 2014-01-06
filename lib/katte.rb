@@ -2,8 +2,9 @@ require 'find'
 require 'logger'
 require 'katte/config'
 require 'katte/debug'
-require 'katte/node/factory'
 require 'katte/node'
+require 'katte/node/factory'
+require 'katte/node/loader'
 require 'katte/driver'
 require 'katte/dependency_graph'
 require 'katte/command/shell'
@@ -36,12 +37,7 @@ class Katte
   end
 
   def self.run
-    nodes = [].tap {|x|
-      Find.find(config.recipes_root) do |path|
-        x << Node::Factory.create(path)
-      end
-    }.compact!
-
+    nodes            = Node::Loader.load(Katte.config.recipes_root)
     dependency_graph = DependencyGraph.new(nodes)
     driver           = Driver.new(dependency_graph)
 

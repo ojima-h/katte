@@ -5,14 +5,15 @@ require 'katte/node/factory'
 class Katte::Node
   class Loader
     class << self
-      def load
-        nodes = []
-        Find.find(Katte.config.recipes_root) do |path|
-          next unless FileTest.file? path
-          nodes << Factory.create(path)
-        end
-        nodes
+      def load(root_path)
+        Find.find(root_path).map {|path|
+          Factory.create(path) if FileTest.file? path
+        }.compact
       end
     end
   end
 end
+
+
+
+
