@@ -21,6 +21,8 @@ class Katte
     end
 
     def run(driver)
+      return unless driver.filter.call(period: @period)
+
       unless @command
         Katte.logger.error("no command specified for %s" % @name)
         return

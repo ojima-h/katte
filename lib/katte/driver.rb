@@ -1,7 +1,10 @@
 class Katte
   class Driver
-    def initialize(dependency_graph)
+    attr_reader :filter
+    def initialize(dependency_graph, options = {})
       @dependency_graph = dependency_graph
+
+      @filter = options[:filter] || ->(_){ true }
 
       @queue = Queue.new
     end

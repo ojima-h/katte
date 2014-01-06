@@ -7,10 +7,16 @@ require 'katte/node/factory'
 require 'katte/node/loader'
 require 'katte/driver'
 require 'katte/dependency_graph'
+require 'katte/filter'
 require 'katte/command/shell'
 require 'katte/file_type/default'
+require 'katte/environment'
 
 class Katte
+  def self.env
+    @env ||= Environment.new
+  end
+
   def self.config
     @config ||= Katte::Config.new
   end
@@ -39,8 +45,14 @@ class Katte
   def self.run
     nodes            = Node::Loader.load(Katte.config.recipes_root)
     dependency_graph = DependencyGraph.new(nodes)
-    driver           = Driver.new(dependency_graph)
+    filter           = Filter.new(datetime: env.datetime)
+    driver           = Driver.new(dependency_graph, filter: filter)
 
     driver.run
   end
 end
+
+
+
+
+
