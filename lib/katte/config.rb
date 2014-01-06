@@ -5,7 +5,7 @@ class Katte
     attr_reader :mode
 
     def initialize
-      @mode    = ENV['KATTE_MODE'] || 'test'
+      @mode    = ENV['KATTE_MODE'] || 'production'
       @config = {}
 
       config_file = File.join(APP_PATH, 'config.yaml')

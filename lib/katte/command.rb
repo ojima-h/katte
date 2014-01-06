@@ -1,4 +1,5 @@
 require 'date'
+require 'fileutils'
 
 class Katte
   class Command
@@ -8,8 +9,13 @@ class Katte
       if Katte.config.mode == 'test'
         yield (Katte.debug.out || @io_null), (Katte.debug.err || @io_null)
       else
-        out = File.open(File.join(Katte.config.result_root, node.name, 'w'))
-        err = File.open(File.join(Katte.config.log_root   , node.name, 'a'))
+        out_file = File.join(Katte.config.result_root, node.name)
+        err_file = File.join(Katte.config.log_root   , node.name)
+
+        [out_file, err_file].each {|f| FileUtils.makedirs(File.dirname(f))}
+
+        out = File.open(out_file, 'w')
+        err = File.open(err_file, 'a')
 
         yield out, err
       end

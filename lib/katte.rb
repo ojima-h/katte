@@ -8,8 +8,12 @@ require 'katte/node/loader'
 require 'katte/driver'
 require 'katte/dependency_graph'
 require 'katte/filter'
+require 'katte/command'
 require 'katte/command/shell'
+require 'katte/command/ruby'
+require 'katte/command/hive'
 require 'katte/file_type/default'
+require 'katte/file_type/sql'
 require 'katte/environment'
 
 class Katte
@@ -23,13 +27,15 @@ class Katte
 
   def self.command(extname)
     case extname
-    when 'sh' then Command::Shell
+    when 'sh'  then Command::Shell
+    when 'rb'  then Command::Ruby
+    when 'sql' then Command::Hive
     else nil
     end
   end
   def self.file_type(extname)
     case extname
-    when 'sh' then FileType::Default
+    when 'sql' then FileType::SQL
     else FileType::Default
     end
   end
@@ -51,8 +57,3 @@ class Katte
     driver.run
   end
 end
-
-
-
-
-
