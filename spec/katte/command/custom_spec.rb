@@ -12,12 +12,9 @@ class Katte::Command
 
     describe "#execute" do
       it "execute shell script" do
-        result = []
-        f = Katte::Command::Custom.execute(@node)
+        messages = Katte::Command::Custom.execute(@node).to_a
 
-        while msg = f.resume; result << msg; end
-
-        expect(result).to eq [[:next, 0], [:next, 1], [:next, 2], :done]
+        expect(messages).to eq [[:next, 0], [:next, 1], [:next, 2], :done]
       end
     end
   end

@@ -11,10 +11,7 @@ class Katte
 
       def run(node, driver)
         @threads << Thread.start {
-          f = node.command.execute(node)
-
-          while _ = f.resume
-            message, *args = _
+          node.command.execute(node).each do |message, *args|
             driver.send(message, node, *args)
             break if [:done, :fail].any? {|m| m == message }
           end
