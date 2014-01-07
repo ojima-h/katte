@@ -11,8 +11,8 @@ describe Katte do
     Katte.debug.out = nil
   end
 
-  describe "#execute" do
-    it "execute shell script" do
+  describe "#run" do
+    it "execute whole node" do
       result = []
       t = Thread.start { while line = @out_r.gets; result << line; end }
 

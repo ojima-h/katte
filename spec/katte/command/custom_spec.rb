@@ -10,9 +10,9 @@ class Katte::Command
                               :path => File.expand_path('../../../recipes/custom.rb', __FILE__))
     end
 
-    describe "#execute" do
+    describe "#call" do
       it "execute shell script" do
-        messages = Katte::Command::Custom.execute(@node).to_a
+        messages = Katte::Command::Custom.call(@node).to_a
 
         expect(messages).to eq [[:next, 0], [:next, 1], [:next, 2], :done]
       end

@@ -17,11 +17,11 @@ class Katte::Command
       Katte.debug.out = nil
     end
 
-    describe "#execute" do
+    describe "#call" do
       it "execute shell script" do
         result = []
         t = Thread.start { while line = @out_r.gets; result << line; end }
-        Katte::Command::Shell.execute(@node)
+        Katte::Command::Shell.call(@node)
         t.exit
 
         expect(result).to eq ["0\n"]

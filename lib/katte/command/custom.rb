@@ -15,7 +15,7 @@ class Katte::Command
       end
     end
 
-    def self.execute(node)
+    def self.call(node)
       Enumerator.new {|receiver|
         DSL.new(receiver).instance_eval(File.read(node.path), node.path)
       }

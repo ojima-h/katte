@@ -1,6 +1,6 @@
 class Katte::Command
   class Null
-    def execute
+    def call
     end
 
     def comment_leading_chr
