@@ -45,7 +45,7 @@ class Katte
     def self.null
       Plugin.new.tap {|p|
         p.name = :null
-        p.command = ->(){ true }
+        p.command = ->(*args){ true }
       }
     end
   end

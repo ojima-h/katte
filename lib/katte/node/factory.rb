@@ -3,6 +3,7 @@ require 'katte/node'
 require 'katte/thread_manager/default'
 require 'katte/thread_manager/sleeper'
 require 'katte/command/custom'
+require 'katte/recipe_parser'
 
 class Katte::Node
   class Factory
@@ -14,15 +15,14 @@ class Katte::Node
           return nil if x.nil?
           break x[:name], x[:ext]
         }
-        file_type = Katte.file_type(ext)
-        command   = Katte.command(ext)
+        plugin = Katte.find_plugin(ext)
 
-        options = file_type.load_options(path)
+        options = Katte::RecipeParser.new(plugin.comment).parse(path)
 
         params = {
           :name    => name,
           :path    => path,
-          :command => command,
+          :command => plugin.command,
           :period  => options.delete('period'),
           :thread  => Katte::ThreadManager::Default.instance,
           :options => options,

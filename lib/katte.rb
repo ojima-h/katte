@@ -15,6 +15,7 @@ require 'katte/command/hive'
 require 'katte/file_type/default'
 require 'katte/file_type/sql'
 require 'katte/environment'
+require 'katte/plugins'
 
 class Katte
   def self.env
@@ -25,19 +26,10 @@ class Katte
     @config ||= Katte::Config.new
   end
 
-  def self.command(extname)
-    case extname
-    when 'sh'  then Command::Shell
-    when 'rb'  then Command::Ruby
-    when 'sql' then Command::Hive
-    else nil
-    end
-  end
-  def self.file_type(extname)
-    case extname
-    when 'sql' then FileType::SQL
-    else FileType::Default
-    end
+  def self.find_plugin(extname)
+    @plugins ||= Hash[load_plugins.map{|p| [p.extname, p] }]
+
+    return (@plugins[extname] || Katte::Plugins.null)
   end
 
   def self.logger
@@ -55,5 +47,18 @@ class Katte
     driver           = Driver.new(dependency_graph, filter: filter)
 
     driver.run
+  end
+
+  private
+  def self.load_plugins
+    Dir[File.expand_path('../katte/plugins/*.rb', __FILE__),
+        File.join(Katte.config.plugins_root, '*.rb')].map {|path|
+      return unless FileTest.file? path
+
+      plugin = Plugins.load(path)
+      return unless [:name, :extname, :command].all? {|m| plugin.respond_to? m }
+
+      plugin
+    }.compact
   end
 end

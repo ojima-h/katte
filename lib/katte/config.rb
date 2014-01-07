@@ -18,12 +18,15 @@ class Katte
     def recipes_root
       @config['recipes_root'] || File.join(APP_PATH, 'recipes')
     end
+    def plugins_root
+      @config['plugins_root'] || File.join(APP_PATH, 'plugins')
+    end
 
     def result_root
       @config['recipes_root'] || File.join(APP_PATH, 'result')
     end
     def log_root
-      @config['recipes_root'] || File.join(APP_PATH, 'log')
+      @config['log_root']     || File.join(APP_PATH, 'log')
     end
   end
 end

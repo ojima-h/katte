@@ -15,7 +15,7 @@ class Katte::Node
         node = Factory.create(@sample_recipe)
         expect(node.parents).to include('test/sample/sub')
         expect(node.name).to eq 'test/sample'
-        expect(node.command).to eq Katte::Command::Shell
+        expect(node.command).to be_respond_to :call
         expect(node.period).to eq 'day'
       end
     end
