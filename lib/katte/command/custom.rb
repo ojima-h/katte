@@ -25,9 +25,15 @@ class Katte::Command
     end
 
     def self.call(node)
-      Katte::Command.open(node) {|out, err|
-        Enumerator.new {|receiver|
-          DSL.new(receiver, out, err).instance_eval(File.read(node.path), node.path)
+      Enumerator.new {|receiver|
+        Katte::Command.open(node) {|out, err|
+          context = DSL.new(receiver, out, err)
+          begin
+            context.instance_eval(File.read(node.path), node.path)
+          rescue => e
+            err.puts e.to_s
+            context.fail
+          end
         }
       }
     end
