@@ -1,10 +1,7 @@
-ENV['KATTE_MODE'] = 'test'
-
 require 'bundler'
 Bundler.require(:default, :test)
 
-require 'rspec'
-require 'debugger'
+ENV['KATTE_MODE'] = 'test'
 
 require 'katte'
 
