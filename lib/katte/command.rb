@@ -16,7 +16,7 @@ class Katte
 
         File.open(out_file, 'w') {|out|
           File.open(err_file, 'a') {|err|
-            yield.call out, err
+            yield out, err
           }
         }
       end
