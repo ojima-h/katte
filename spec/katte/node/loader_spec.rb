@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-require 'katte/node/loader'
-
 class Katte::Node
   describe Loader do
     it "load all node under recipes root" do

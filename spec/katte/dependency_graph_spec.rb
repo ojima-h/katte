@@ -1,7 +1,5 @@
 require 'spec_helper'
 
-require 'katte/dependency_graph'
-
 class Katte
   describe DependencyGraph do
     before :all do

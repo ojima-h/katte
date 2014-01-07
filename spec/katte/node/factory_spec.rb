@@ -1,9 +1,6 @@
 require 'spec_helper'
 require 'stringio'
 
-require 'katte/node/factory'
-require 'katte/command/shell'
-
 class Katte::Node
   describe Factory do
     before :all do

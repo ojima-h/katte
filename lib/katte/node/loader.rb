@@ -1,7 +1,5 @@
 require 'find'
 
-require 'katte/node/factory'
-
 class Katte::Node
   class Loader
     class << self

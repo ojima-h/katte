@@ -2,8 +2,6 @@ require 'spec_helper'
 require 'logger'
 require 'stringio'
 
-require 'katte/thread_pool'
-
 class Katte
   describe ThreadPool do
     class Spy

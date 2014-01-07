@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'katte/filter'
 
 class Katte
   describe Filter do

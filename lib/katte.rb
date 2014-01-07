@@ -1,21 +1,13 @@
 require 'find'
 require 'logger'
+require 'katte/environment'
 require 'katte/config'
+require 'katte/plugins'
 require 'katte/debug'
 require 'katte/node'
-require 'katte/node/factory'
-require 'katte/node/loader'
-require 'katte/driver'
 require 'katte/dependency_graph'
 require 'katte/filter'
-require 'katte/command'
-require 'katte/command/shell'
-require 'katte/command/ruby'
-require 'katte/command/hive'
-require 'katte/file_type/default'
-require 'katte/file_type/sql'
-require 'katte/environment'
-require 'katte/plugins'
+require 'katte/driver'
 
 class Katte
   def self.env
@@ -23,13 +15,13 @@ class Katte
   end
 
   def self.config
-    @config ||= Katte::Config.new
+    @config ||= Config.new
   end
 
   def self.find_plugin(extname)
     @plugins ||= Hash[load_plugins.map{|p| [p.extname, p] }]
 
-    return (@plugins[extname] || Katte::Plugins.null)
+    return (@plugins[extname] || Plugins.null)
   end
 
   def self.logger

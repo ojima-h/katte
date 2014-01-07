@@ -1,8 +1,5 @@
 require 'spec_helper'
 
-require 'katte/driver'
-require 'katte/node'
-require 'katte/dependency_graph'
 require 'katte/command/test'
 
 class Katte

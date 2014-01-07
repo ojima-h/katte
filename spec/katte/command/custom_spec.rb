@@ -1,7 +1,4 @@
 require 'spec_helper'
-require 'katte/command'
-require 'katte/command/custom'
-require 'katte/node'
 
 class Katte::Command
   describe Custom do

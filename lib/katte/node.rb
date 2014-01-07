@@ -1,3 +1,6 @@
+require 'katte/node/factory'
+require 'katte/node/loader'
+
 class Katte
   class Node
     attr_reader :name

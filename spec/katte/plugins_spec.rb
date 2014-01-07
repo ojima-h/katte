@@ -1,6 +1,5 @@
 require 'spec_helper'
 require 'tempfile'
-require 'katte/plugins'
 
 class Katte
   describe Plugins do

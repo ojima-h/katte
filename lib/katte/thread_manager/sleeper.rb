@@ -1,5 +1,3 @@
-require 'fiber'
-
 class Katte
   class ThreadManager
     class Sleeper

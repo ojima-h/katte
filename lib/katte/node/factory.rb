@@ -1,5 +1,4 @@
 require 'pathname'
-require 'katte/node'
 require 'katte/thread_manager/default'
 require 'katte/thread_manager/sleeper'
 require 'katte/command/custom'
