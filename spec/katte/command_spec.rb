@@ -10,7 +10,7 @@ class Katte
         Command.simple(node, 'bash', node.path)
 
         output = Debug::Output.history.pop
-        result = output[:out].to_a.join("\n")
+        result = output[:out].to_a.join
 
         expect(result).to eq "0\n"
       end

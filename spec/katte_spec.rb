@@ -8,7 +8,7 @@ describe Katte do
 
       result = []
       result << Katte::Debug::Output.history.pop until Katte::Debug::Output.history.empty?
-      result.map! {|output| output[:out].to_a.join("\n") }
+      result.map! {|output| output[:out].to_a }
 
       today = Date.today.strftime("%Y-%m-%d")
       ["#{today}\n", "0\n", "custom:1\n", "custom:2\n"].all? do |line|
