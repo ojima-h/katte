@@ -1,23 +1,24 @@
 require 'date'
 require 'fileutils'
 
+require 'katte/debug'
+
 class Katte
   class Command
     def self.open(node)
-      @io_null ||= File.open('/dev/null')
-
       if Katte.config.mode == 'test'
-        yield (Katte.debug.out || @io_null), (Katte.debug.err || @io_null)
+        Debug::Output.open(node) {|out, err| yield out, err }
       else
         out_file = File.join(Katte.config.result_root, node.name)
         err_file = File.join(Katte.config.log_root   , node.name)
 
-        [out_file, err_file].each {|f| FileUtils.makedirs(File.dirname(f))}
+        [out_file, err_file].each {|f| FileUtils.makedirs(File.dirname(f)) }
 
-        out = File.open(out_file, 'w')
-        err = File.open(err_file, 'a')
-
-        yield out, err
+        File.open(out_file, 'w') {|out|
+          File.open(err_file, 'a') {|err|
+            yield.call out, err
+          }
+        }
       end
     end
 
@@ -25,7 +26,7 @@ class Katte
       self.open(node) {|out, err|
         pid = spawn(Katte.env.to_hash, program, *args, :out => out, :err => err)
         _, status = Process.waitpid2(pid)
-        return status.success?
+        status.success?
       }
     end
   end
