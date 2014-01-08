@@ -3,6 +3,7 @@ require 'spec_helper'
 class Katte
   describe Command do
     describe ".simple" do
+      before(:each) { Debug::Output.history.clear }
       it "execute shell script" do
         node = Katte::Node.new(:name => 'test/sample',
                                :path => File.expand_path('../../recipes/test/sample.sh', __FILE__))
