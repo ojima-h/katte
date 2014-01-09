@@ -6,7 +6,7 @@ describe Katte do
     before(:each) { Katte::Debug::Output.history.clear }
 
     it "execute whole node" do
-      Katte.run
+      Katte.app.run
 
       result = []
       result << Katte::Debug::Output.history.pop until Katte::Debug::Output.history.empty?

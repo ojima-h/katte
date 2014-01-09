@@ -14,7 +14,7 @@ class Katte::Node
           return nil if x.nil?
           break x[:name], x[:ext]
         }
-        plugin = Katte.find_plugin(ext)
+        plugin = Katte.app.find_plugin(ext)
 
         options = Katte::RecipeParser.new(plugin.comment).parse(path)
 
@@ -41,7 +41,7 @@ class Katte::Node
         return nil if m.nil?
 
         return {
-          :name => m[:name].gsub(%r(^#{Katte.config.recipes_root}/), ''),
+          :name => m[:name].gsub(%r(^#{Katte.app.config.recipes_root}/), ''),
           :ext  => m[:ext]
         }
       end

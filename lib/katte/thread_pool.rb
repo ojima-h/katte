@@ -3,7 +3,7 @@ require 'thread'
 class Katte
   class ThreadPool
     attr_reader :threads
-    def initialize(threads_num = 4, logger = Katte.logger)
+    def initialize(threads_num = 4, logger = Katte.app.logger)
       @queue         = Queue.new
       @threads_num   = threads_num
       @logger        = logger

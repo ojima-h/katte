@@ -16,8 +16,8 @@ class Katte::Command
         @receiver << [:next, t]
       end
 
-      def env      ; Katte.env         ; end
-      def env_hash ; Katte.env.to_hash ; end
+      def env      ; Katte.app.env         ; end
+      def env_hash ; Katte.app.env.to_hash ; end
 
       def log(*args)
         @err.puts args

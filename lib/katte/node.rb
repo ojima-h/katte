@@ -27,7 +27,7 @@ class Katte
       return unless driver.filter.call(period: @period)
 
       unless @command
-        Katte.logger.error("no command specified for %s" % @name)
+        Katte.app.logger.error("no command specified for %s" % @name)
         return
       end
 

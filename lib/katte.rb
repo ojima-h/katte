@@ -10,30 +10,36 @@ require 'katte/filter'
 require 'katte/driver'
 
 class Katte
-  def self.env
-    @env ||= Environment.new
+  def self.new(params = {})
+    @instance ||= super(params)
+  end
+  def self.app(params = {})
+    @instance ||= new(params)
   end
 
-  def self.config
-    @config ||= Config.new
+  def initialize(params = {})
+    @env    = Environment.new(params)
+    @config = Config.new
+    @logger = Logger.new(STDOUT)
   end
 
-  def self.find_plugin(extname)
+  attr_reader :env
+  attr_reader :config
+  attr_reader :logger
+
+  def find_plugin(extname)
     @plugins ||= Hash[load_plugins.map{|p| [p.extname, p] }]
 
     return (@plugins[extname] || Plugins.null)
   end
 
-  def self.logger
-    @logger ||= Logger.new(STDOUT)
-  end
-  def self.debug
+  def debug
     return unless config.mode == 'test'
     @debug ||= Debug.new
   end
 
-  def self.run
-    nodes            = Node::Loader.load(Katte.config.recipes_root)
+  def run
+    nodes            = Node::Loader.load(Katte.app.config.recipes_root)
     dependency_graph = DependencyGraph.new(nodes)
     filter           = Filter.new(datetime: env.datetime)
     driver           = Driver.new(dependency_graph, filter: filter)
@@ -42,9 +48,9 @@ class Katte
   end
 
   private
-  def self.load_plugins
+  def load_plugins
     Dir[File.expand_path('../katte/plugins/*.rb', __FILE__),
-        File.join(Katte.config.plugins_root, '*.rb')].map {|path|
+        File.join(Katte.app.config.plugins_root, '*.rb')].map {|path|
       return unless FileTest.file? path
 
       plugin = Plugins.load(path)
