@@ -1,6 +1,6 @@
 class Katte::Plugins
   class Plugin
-    Output = Struct.new(:name, :command)
+    Output = Struct.new(:name, :type, :command)
   end
 
   class DSL
@@ -17,10 +17,8 @@ class Katte::Plugins
 
       context = @__context_filetype__.new
       context.instance_eval &proc
-      
 
-      necessary_attr = [:name, :command]
-      return unless necessary_attr.all? {|attr| context.plugin.send(attr) }
+      return unless context.plugin.command
 
       context.plugin.name = name
       context.plugin.type = :output

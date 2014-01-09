@@ -1,6 +1,7 @@
 require 'katte/command'
 
 require 'katte/plugins/dsl/file_type'
+require 'katte/plugins/dsl/output'
 
 class Katte
   class Plugins
