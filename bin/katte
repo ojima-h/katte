@@ -5,14 +5,8 @@ $LOAD_PATH.unshift(File.expand_path(File.join(__FILE__, '../../lib')))
 APP_PATH = File.expand_path('../../', __FILE__)
 
 require 'katte'
-Katte.new.run
 
+date = ARGV.shift
 
-
-
-
-
-
-
-
-
+app = Katte.new(datetime: date)
+app.run
