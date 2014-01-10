@@ -21,16 +21,25 @@ class Katte
     @env    = Environment.new(params)
     @config = Config.new
     @logger = Logger.new(STDOUT)
+
+    @plugins = {
+      :file_type => {},
+      :output    => {},
+    }
+    load_plugins.each {|p|
+      case p.type
+      when :file_type then @plugins[:file_type][p.extname] = p
+      when :output    then @plugins[:output][p.name] = p
+      end
+    }
   end
 
   attr_reader :env
   attr_reader :config
   attr_reader :logger
 
-  def find_plugin(extname)
-    @plugins ||= Hash[load_plugins.map{|p| [p.extname, p] }]
-
-    return (@plugins[extname] || Plugins.null)
+  def find_plugin(type, extname)
+    return (@plugins[type][extname] || Plugins.null)
   end
 
   def debug
@@ -49,14 +58,12 @@ class Katte
 
   private
   def load_plugins
-    Dir[File.expand_path('../katte/plugins/*.rb', __FILE__),
-        File.join(Katte.app.config.plugins_root, '*.rb')].map {|path|
-      return unless FileTest.file? path
+    Dir[File.expand_path('../katte/plugins/file_type/*.rb', __FILE__),
+        File.expand_path('../katte/plugins/output/*.rb', __FILE__),
+        File.join(@config.plugins_root, '**', '*.rb')].map {|path|
+      next unless FileTest.file? path
 
-      plugin = Plugins.load(path)
-      return unless [:name, :extname, :command].all? {|m| plugin.respond_to? m }
-
-      plugin
+      Plugins.load(path)
     }.compact
   end
 end

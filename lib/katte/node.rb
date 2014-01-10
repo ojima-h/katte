@@ -14,6 +14,7 @@ class Katte
       @name    = params[:name]
       @path    = params[:path]
       @command = params[:command]
+      @output  = params[:output]
       @period  = params[:period]  || 'day'
       @thread  = params[:thread]  || Katte::ThreadManager::Default.instance
       @options = params[:options] || {}
@@ -21,6 +22,10 @@ class Katte
 
     def parents
       @options['require'] || []
+    end
+
+    def open &proc
+      @output.call(self, &proc)
     end
 
     def run(driver)

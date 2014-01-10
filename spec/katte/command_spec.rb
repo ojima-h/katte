@@ -5,8 +5,9 @@ class Katte
     describe ".simple" do
       before(:each) { Debug::Output.history.clear }
       it "execute shell script" do
-        node = Katte::Node.new(:name => 'test/sample',
-                               :path => File.expand_path('../../recipes/test/sample.sh', __FILE__))
+        node = Katte::Node.new(:name   => 'test/sample',
+                               :path   => File.expand_path('../../recipes/test/sample.sh', __FILE__),
+                               :output => Katte.app.find_plugin(:output, :debug).command)
 
         Command.simple(node, 'bash', node.path)
 

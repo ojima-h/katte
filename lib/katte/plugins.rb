@@ -1,10 +1,18 @@
 require 'katte/command'
 
-require 'katte/plugins/dsl/file_type'
-require 'katte/plugins/dsl/output'
-
 class Katte
   class Plugins
+    class DSL
+      module Base
+        def app
+          Katte.app
+        end
+      end
+    end
+
+    require 'katte/plugins/dsl/file_type'
+    require 'katte/plugins/dsl/output'
+
     @plugins = {}
     def self.plugins; @plugins; end
 

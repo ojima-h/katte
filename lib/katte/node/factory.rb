@@ -14,14 +14,17 @@ class Katte::Node
           return nil if x.nil?
           break x[:name], x[:ext]
         }
-        plugin = Katte.app.find_plugin(ext)
+        file_type_plugin = Katte.app.find_plugin(:file_type, ext)
 
-        options = Katte::RecipeParser.new(plugin.comment).parse(path)
+        options = Katte::RecipeParser.new(file_type_plugin.comment).parse(path)
+
+        output_plugin = Katte.app.find_plugin(:output, Katte.app.config.mode == 'test' ? :debug : options['output'] || :file)
 
         params = {
           :name    => name,
           :path    => path,
-          :command => plugin.command,
+          :command => file_type_plugin.command,
+          :output  => output_plugin.command,
           :period  => options.delete('period'),
           :thread  => Katte::ThreadManager::Default.instance,
           :options => options,

@@ -6,6 +6,8 @@ class Katte::Plugins
   class DSL
     def file_type name, &proc
       @__context_filetype__ ||= Class.new do
+        include Base
+        
         attr_reader :plugin
         def initialize
           @plugin = Plugin::FileType.new
