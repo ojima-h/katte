@@ -2,7 +2,7 @@ class Katte::Plugins::Output
   class File_ < Katte::Plugins::Output
     name :file
 
-    def call(node)
+    def open(node)
       out_file = File.join(Katte.app.config.result_root, node.name, app.env.to_hash['date'] + ".txt")
       err_file = File.join(Katte.app.config.log_root   , node.name, app.env.to_hash['date'] + ".txt")
 

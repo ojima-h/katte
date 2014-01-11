@@ -20,11 +20,6 @@ class Katte
     @env    = Environment.new(params)
     @config = Config.new
     @logger = Logger.new(STDOUT)
-
-    @plugins = {
-      :file_type => {},
-      :output    => {},
-    }
   end
 
   attr_reader :env

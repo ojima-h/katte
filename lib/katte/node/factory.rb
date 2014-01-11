@@ -12,7 +12,7 @@ class Katte::Node
           :name         => recipe.name,
           :path         => recipe.path,
           :file_type    => recipe.file_type,
-          :output       => output.command,
+          :output       => output,
           :period       => recipe.directive['period'],
           :task_manager => Katte::TaskManager::Default.instance,
           :options      => recipe.directive,

@@ -25,7 +25,7 @@ class Katte
     end
 
     def open &proc
-      @output.call(self, &proc)
+      @output.open(self, &proc)
     end
 
     def run(driver)

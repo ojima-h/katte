@@ -5,7 +5,7 @@ class Katte::Plugins::Output
     def history
       @history ||= Queue.new
     end
-    def call(node)
+    def open(node)
       out_r, out_w = IO.pipe
       err_r, err_w = IO.pipe
 

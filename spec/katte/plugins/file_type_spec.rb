@@ -7,7 +7,7 @@ class Katte::Plugins
       it "execute shell script" do
         node = Katte::Node.new(:name   => 'test/sample',
                                :path   => File.expand_path('../../../recipes/test/sample.sh', __FILE__),
-                               :output => Katte::Plugins.output[:debug].command)
+                               :output => Katte::Plugins.output[:debug])
 
         file_type = FileType.new
         file_type.simple_exec(node, 'bash', node.path)
