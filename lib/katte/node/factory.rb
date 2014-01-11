@@ -1,13 +1,12 @@
 require 'pathname'
 require 'katte/thread_manager/default'
 require 'katte/thread_manager/sleeper'
-require 'katte/command/custom'
 
 class Katte::Node
   class Factory
     class << self
       def create(recipe)
-        output = Katte.app.find_plugin(:output, Katte.app.config.mode == 'test' ? :debug : recipe.directive['output'] || :file)
+        output = Katte::Plugins.output[Katte.app.config.mode == 'test' ? :debug : recipe.directive['output'] || :file]
 
         params = {
           :name    => recipe.name,
@@ -21,7 +20,7 @@ class Katte::Node
 
         if recipe.directive['custom']
           params[:thread]  = Katte::ThreadManager::Sleeper.instance
-          params[:command] = Katte::Command::Custom
+          params[:command] = Katte::Plugins.file_type[:custom].command
         end
 
         Katte::Node.new params

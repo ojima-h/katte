@@ -1,7 +1,10 @@
-file_type :R do
-  extname 'R'
-  comment_by '#'
-  command do |node|
-    simple_exec node, 'Rscript', node.path
+class Katte::Plugins::FileType
+  class R < Katte::Plugins::FileType
+    extname    'R'
+    comment_by '#'
+
+    def execute(node)
+      simple_exec(node, 'Rscirpt', node.path)
+    end
   end
 end

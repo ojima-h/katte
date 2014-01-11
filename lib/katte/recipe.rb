@@ -16,7 +16,7 @@ class Katte
       return unless FileTest.file? path
       return unless m = path_pattern.match(path)
 
-      file_type = Katte.app.find_plugin(:file_type, m[:ext])
+      file_type = Katte::Plugins.file_type[m[:ext]]
 
       directive = parse(path, file_type)
 
@@ -27,8 +27,8 @@ class Katte
     end
 
     def self.parse(path, file_type)
-      comment_pattern   = /^#{file_type.comment}|^\s*$/
-      directive_pattern = /^#{file_type.comment}\s*(?<key>\w+)\s*(?<value>.+)$/
+      comment_pattern   = /^#{file_type.comment_by}|^\s*$/
+      directive_pattern = /^#{file_type.comment_by}\s*(?<key>\w+)\s*(?<value>.+)$/
 
       directive = {}
       open(path) do |io|

@@ -3,13 +3,13 @@ require 'date'
 
 describe Katte do
   describe "#run" do
-    before(:each) { Katte::Debug::Output.history.clear }
+    before(:each) { Katte::Plugins.output[:debug].history.clear }
 
     it "execute whole node" do
       Katte.app.run
 
       result = []
-      result << Katte::Debug::Output.history.pop until Katte::Debug::Output.history.empty?
+      result << Katte::Plugins.output[:debug].history.pop until Katte::Plugins.output[:debug].history.empty?
       result.map! {|output| output[:out].to_a.join }
 
       today = Date.today.strftime("%Y-%m-%d")

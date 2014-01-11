@@ -1,5 +1,7 @@
-class Katte::Command
-  class Custom
+class Katte::Plugins::FileType
+  class Custom < Katte::Plugins::FileType
+    extname :custom
+
     class DSL
       def initialize(receiver, out, err)
         @receiver = receiver
@@ -24,7 +26,7 @@ class Katte::Command
       end
     end
 
-    def self.call(node)
+    def execute(node)
       Enumerator.new {|receiver|
         node.open {|out, err|
           context = DSL.new(receiver, out, err)

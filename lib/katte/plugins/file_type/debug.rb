@@ -1,8 +1,10 @@
-class Katte::Command
-  class Test
+class Katte::Plugins::FileType
+  class Debug < Katte::Plugins::FileType
+    extname :debug
+
     class Abort < StandardError; end
 
-    def self.call(node)
+    def execute(node)
       node.options['callback'].each {|cb| cb.call(node) }
       return true
     rescue Abort => e
