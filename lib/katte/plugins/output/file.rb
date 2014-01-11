@@ -2,16 +2,23 @@ class Katte::Plugins::Output
   class File_ < Katte::Plugins::Output
     name :file
 
-    def open(node)
-      out_file = File.join(Katte.app.config.result_root, node.name, app.env.to_hash['date'] + ".txt")
-      err_file = File.join(Katte.app.config.log_root   , node.name, app.env.to_hash['date'] + ".txt")
+    def out(node, stream)
+      file = File.join(Katte.app.config.result_root, node.name, app.env.to_hash['date'] + ".txt")
 
-      [out_file, err_file].each {|f| FileUtils.makedirs(File.dirname(f)) }
+      FileUtils.makedirs(File.dirname(file))
 
-      File.open(out_file, 'w') {|out|
-        File.open(err_file, 'a') {|err|
-          yield out, err
-        }
+      File.open(file, 'w') {|out|
+        stream.each {|line| out << line }
+      }
+    end
+
+    def err(node, stream)
+      file = File.join(Katte.app.config.log_root, node.name, app.env.to_hash['date'] + ".txt")
+
+      FileUtils.makedirs(File.dirname(file))
+
+      File.open(file, 'a') {|out|
+        stream.each {|line| out << line }
       }
     end
   end

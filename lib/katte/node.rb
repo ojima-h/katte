@@ -24,8 +24,20 @@ class Katte
       @options['require'] || []
     end
 
-    def open &proc
-      @output.open(self, &proc)
+    def open
+      out_r, out_w = IO.pipe
+      err_r, err_w = IO.pipe
+
+      yield out_w, err_w
+      [out_w, err_w].each {|io| io.close unless io.closed? }
+
+      out_a, err_a = out_r.to_a, err_r.to_a
+      [out_r, err_r].each {|io| io.close unless io.closed? }
+
+      @output.reduce(out_a) {|stream, o| o.out(self, stream) }
+      @output.reduce(err_a) {|stream, o| o.err(self, stream) }
+    ensure
+      [out_r, out_w, err_r, err_w].each {|io| io.close unless io.closed? }
     end
 
     def run(driver)

@@ -5,15 +5,11 @@ class Katte::Plugins::Output
     def history
       @history ||= Queue.new
     end
-    def open(node)
-      out_r, out_w = IO.pipe
-      err_r, err_w = IO.pipe
 
-      history.push(node: node, out: out_r, err: err_r)
+    def out(node, stream)
+      history.push(node: node, out: stream.to_enum)
 
-      yield out_w, err_w
-    ensure
-      [out_w, err_w].each {|w| w.close unless w.closed? }
+      stream
     end
   end
 end
