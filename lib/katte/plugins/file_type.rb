@@ -12,8 +12,5 @@ class Katte::Plugins
       }
     end
 
-    def command
-      @command ||= method(:execute)
-    end
   end
 end

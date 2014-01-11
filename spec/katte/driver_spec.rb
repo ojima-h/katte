@@ -9,9 +9,9 @@ class Katte
       debug_plugin = Katte::Plugins.file_type[:debug]
 
       @nodes = []
-      @nodes << Node.new(name: 'test_1', command: debug_plugin.command, options: {'callback' => [callback]})
-      @nodes << Node.new(name: 'test_2', command: debug_plugin.command, options: {'require' => ['test_1'], 'callback' => [callback]})
-      @nodes << Node.new(name: 'test_3', command: debug_plugin.command, options: {'require' => ['test_2'], 'callback' => [callback]})
+      @nodes << Node.new(name: 'test_1', file_type: debug_plugin, options: {'callback' => [callback]})
+      @nodes << Node.new(name: 'test_2', file_type: debug_plugin, options: {'require' => ['test_1'], 'callback' => [callback]})
+      @nodes << Node.new(name: 'test_3', file_type: debug_plugin, options: {'require' => ['test_2'], 'callback' => [callback]})
 
       @graph = DependencyGraph.new(@nodes)
     end
@@ -27,18 +27,18 @@ class Katte
       call_log = []
       debug_plugin = Katte::Plugins.file_type[:debug]
       nodes = [ Node.new(name: 'test_1',
-                         command: debug_plugin.command,
+                         file_type: debug_plugin,
                          options: {
                            'callback' => [Proc.new{|node| raise Katte::Plugins::FileType::Debug::Abort}]
                          }),
                 Node.new(name: 'test_2',
-                         command: debug_plugin.command,
+                         file_type: debug_plugin,
                          options: {
                            'require' => ['test_1'],
                            'callback' => [Proc.new{|node| call_log << node.name}],
                          }),
                 Node.new(name: 'test_3',
-                         command: debug_plugin.command,
+                         file_type: debug_plugin,
                          options: {
                            'callback' => [Proc.new{|node| call_log << node.name}],
                          }),

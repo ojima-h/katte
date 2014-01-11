@@ -8,7 +8,7 @@ class Katte
 
       def run(node, driver)
         @thread_pool.push {
-          result = node.command.call(node)
+          result = node.file_type.execute(node)
           result ? driver.done(node) : driver.fail(node)
         }
       end

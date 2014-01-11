@@ -11,7 +11,7 @@ class Katte::Node
         params = {
           :name         => recipe.name,
           :path         => recipe.path,
-          :command      => recipe.file_type.command,
+          :file_type    => recipe.file_type,
           :output       => output.command,
           :period       => recipe.directive['period'],
           :task_manager => Katte::TaskManager::Default.instance,
@@ -20,7 +20,7 @@ class Katte::Node
 
         if recipe.directive['custom']
           params[:task_manager]  = Katte::TaskManager::Sleeper.instance
-          params[:command]       = Katte::Plugins.file_type[:custom].command
+          params[:file_type]     = Katte::Plugins.file_type[:custom]
         end
 
         Katte::Node.new params
