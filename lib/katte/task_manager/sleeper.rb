@@ -1,5 +1,5 @@
 class Katte
-  class ThreadManager
+  class TaskManager
     class Sleeper
       attr_reader :threads
 

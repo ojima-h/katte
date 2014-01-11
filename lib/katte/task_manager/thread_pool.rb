@@ -1,6 +1,6 @@
 require 'thread'
 
-class Katte
+class Katte::TaskManager
   class ThreadPool
     attr_reader :threads
     def initialize(threads_num = 4, logger = Katte.app.logger)

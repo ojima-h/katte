@@ -10,14 +10,14 @@ class Katte
     attr_reader :options
 
     def initialize(params)
-      @params  = params
-      @name    = params[:name]
-      @path    = params[:path]
-      @command = params[:command]
-      @output  = params[:output]
-      @period  = params[:period]  || 'day'
-      @thread  = params[:thread]  || Katte::ThreadManager::Default.instance
-      @options = params[:options] || {}
+      @params       = params
+      @name         = params[:name]
+      @path         = params[:path]
+      @command      = params[:command]
+      @output       = params[:output]
+      @period       = params[:period]       || 'day'
+      @task_manager = params[:task_manager] || Katte::TaskManager::Default.instance
+      @options      = params[:options]      || {}
     end
 
     def parents
@@ -36,7 +36,7 @@ class Katte
         return
       end
 
-      @thread.run(self, driver)
+      @task_manager.run(self, driver)
     end
   end
 end

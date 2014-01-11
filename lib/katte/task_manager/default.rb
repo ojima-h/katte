@@ -1,6 +1,6 @@
-require 'katte/thread_pool'
+require 'katte/task_manager/thread_pool'
 class Katte
-  class ThreadManager
+  class TaskManager
     class Default
       def self.instance
         @instance ||= self.new

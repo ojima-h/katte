@@ -6,8 +6,6 @@ class Katte::Plugins::Output
       @history ||= Queue.new
     end
     def call(node)
-      reader_thread = nil
-
       out_r, out_w = IO.pipe
       err_r, err_w = IO.pipe
 
