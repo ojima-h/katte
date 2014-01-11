@@ -3,8 +3,7 @@ require 'spec_helper'
 class Katte::Command
   describe Custom do
     before :all do
-      @node = Katte::Node.new(:name => 'custom',
-                              :path => File.expand_path('../../../recipes/custom.rb', __FILE__))
+      @node = Katte::Node::Factory.create(File.expand_path('../../../recipes/custom.rb', __FILE__))
     end
 
     describe "#call" do
