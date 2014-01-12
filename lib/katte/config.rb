@@ -28,5 +28,8 @@ class Katte
     def log_root
       @config['log_root']     || File.join(APP_PATH, 'log')
     end
+
+    def factory
+    end
   end
 end

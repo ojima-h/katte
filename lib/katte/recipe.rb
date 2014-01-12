@@ -1,9 +1,9 @@
 class Katte
   class Recipe
-    attr_reader :name
-    attr_reader :path
-    attr_reader :file_type
-    attr_reader :directive
+    attr_accessor :name
+    attr_accessor :path
+    attr_accessor :file_type
+    attr_accessor :directive
 
     def initialize(params)
       @name      = params[:name]

@@ -4,10 +4,10 @@ require 'katte/recipe'
 class Katte::Node
   class Loader
     class << self
-      def load(root_path)
+      def load(root_path, factory = Katte::Node::Factory)
         Find.find(root_path).map {|path|
           recipe = Katte::Recipe.load(path)
-          Factory.create(recipe) if recipe
+          factory.create(recipe) if recipe
         }.compact
       end
     end

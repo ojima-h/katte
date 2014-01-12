@@ -32,7 +32,8 @@ class Katte
   end
 
   def run
-    nodes            = Node::Loader.load(Katte.app.config.recipes_root)
+    node_factory     = config.factory || Katte::Node::Factory
+    nodes            = Node::Loader.load(config.recipes_root, node_factory)
     dependency_graph = DependencyGraph.new(nodes)
     filter           = Filter.new(datetime: env.datetime)
     driver           = Driver.new(dependency_graph, filter: filter)

@@ -3,14 +3,11 @@ require 'katte/node/loader'
 
 class Katte
   class Node
-    attr_reader :name
-    attr_reader :path
-    attr_reader :file_type
-    attr_reader :period
-    attr_reader :options
+    %w(name path file_type output period task_manager options).each {|attr|
+      attr_accessor attr
+    }
 
     def initialize(params)
-      @params       = params
       @name         = params[:name]
       @path         = params[:path]
       @file_type    = params[:file_type]
