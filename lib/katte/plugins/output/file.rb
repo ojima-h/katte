@@ -1,9 +1,13 @@
+require 'fileutils'
+
 class Katte::Plugins::Output
   class File_ < Katte::Plugins::Output
     name :file
 
     def out(node, stream)
-      file = File.join(Katte.app.config.result_root, node.name, app.env.to_hash['date'] + ".txt")
+      file = File.join(Katte.app.config.result_root,
+                       node.name,
+                       Katte.app.env.to_hash['date'] + ".txt")
 
       FileUtils.makedirs(File.dirname(file))
 
@@ -13,7 +17,7 @@ class Katte::Plugins::Output
     end
 
     def err(node, stream)
-      file = File.join(Katte.app.config.log_root, node.name, app.env.to_hash['date'] + ".txt")
+      file = File.join(Katte.app.config.log_root, node.name, Katte.app.env.to_hash['date'] + ".txt")
 
       FileUtils.makedirs(File.dirname(file))
 

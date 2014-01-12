@@ -35,4 +35,12 @@ class Katte
 
     driver.run
   end
+
+  def exec(recipe_path)
+    node_factory = config.factory || Katte::Node::Factory
+
+    recipe = Katte::Recipe.load(recipe_path)
+    node   = node_factory.create(recipe)
+    node.file_type.execute(node)
+  end
 end

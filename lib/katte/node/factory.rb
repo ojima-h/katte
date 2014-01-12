@@ -6,8 +6,8 @@ class Katte::Node
   class Factory
     def self.create(recipe)
       output = (recipe.directive['output'] || [:file]).map {|type|
-        Katte::Plugins.output[:type]
-      }
+        Katte::Plugins.output[type]
+      }.compact
 
       params = {
         :name         => recipe.name,
