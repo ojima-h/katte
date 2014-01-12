@@ -16,19 +16,14 @@ class Katte
     @instance ||= new(params)
   end
 
-  def initialize(params = {})
-    @env    = Environment.new(params)
-    @config = Config.new
-    @logger = Logger.new(STDOUT)
-  end
-
   attr_reader :env
   attr_reader :config
   attr_reader :logger
 
-  def debug
-    return unless config.mode == 'test'
-    @debug ||= Debug.new
+  def initialize(params = {})
+    @env    = Environment.new(params)
+    @config = Katte::Config.config
+    @logger = Logger.new(STDOUT)
   end
 
   def run

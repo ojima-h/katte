@@ -2,34 +2,20 @@ require 'yaml'
 
 class Katte
   class Config
-    attr_reader :mode
+    config_klass = Struct.new(:mode,
+                              :recipes_root,
+                              :result_root,
+                              :log_root,
+                              :factory)
+    @config = config_klass.new
 
-    def initialize
-      @mode    = ENV['KATTE_MODE'] || 'production'
-      @config = {}
+    @config.mode         = ENV['KATTE_MODE'] || 'production'
+    @config.recipes_root = File.join(APP_PATH, 'recipes')
+    @config.result_root  = File.join(APP_PATH, 'result')
+    @config.log_root     = File.join(APP_PATH, 'log')
 
-      config_file = File.join(APP_PATH, 'config.yaml')
-      return unless FileTest.exists? config_file
-
-      yaml = YAML.load_file(config_file)
-      @config = yaml[@mode]
-    end
-
-    def recipes_root
-      @config['recipes_root'] || File.join(APP_PATH, 'recipes')
-    end
-    def plugins_root
-      @config['plugins_root'] || File.join(APP_PATH, 'plugins')
-    end
-
-    def result_root
-      @config['recipes_root'] || File.join(APP_PATH, 'result')
-    end
-    def log_root
-      @config['log_root']     || File.join(APP_PATH, 'log')
-    end
-
-    def factory
+    def self.config
+      self == Katte::Config ? @config : Katte::Config.config
     end
   end
 end
