@@ -51,7 +51,7 @@ class Katte
 
     def self.parse(path, file_type)
       comment_pattern   = /^#{file_type.comment_by}|^\s*$/
-      directive_pattern = /^#{file_type.comment_by}\s*(?<key>\w+):\s*(?<value>.+)$/
+      directive_pattern = /^#{file_type.comment_by}\s*(?<key>\w+)\s*:\s*(?<value>.+)$/
 
       directive = Hash.new {|h,k| h[k] = [] }
       open(path) do |io|
