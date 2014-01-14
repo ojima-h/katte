@@ -4,7 +4,7 @@ class Katte::Plugins::FileType
     comment_by '#'
 
     def execute(node)
-      simple_exec(node, 'Rscirpt', node.path)
+      simple_exec(node, 'Rscript', node.path)
     end
   end
 end
