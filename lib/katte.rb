@@ -23,7 +23,13 @@ class Katte
   def initialize(params = {})
     @env    = Environment.new(params)
     @config = Katte::Config.config
-    @logger = Logger.new(STDOUT)
+
+    @logger = if params[:verbose] || config.mode == 'test'
+                Logger.new(STDOUT)
+              else
+                Logger.new(File.join(@config.log_root, 'katte.log'), 'daily')
+              end
+    @logger.level = Logger::WARN if config.mode == 'test'
   end
 
   def run
@@ -34,6 +40,22 @@ class Katte
     driver           = Driver.new(dependency_graph, filter: filter)
 
     driver.run
+
+    unless config.mode == 'test'
+      File.open(File.join(@config.log_root, 'summary.log'), 'w') do |file|
+        file.print <<-EOF
+Summary:
+  success: #{driver.summary[:success].length}
+  fail:    #{driver.summary[:fail].length}
+  skip:    #{driver.summary[:skip].length}
+        EOF
+      end
+      File.open(File.join(@config.log_root, 'failed.log'), 'w') do |file|
+        driver.summary[:fail].each do |node|
+          file.puts node.name
+        end
+      end
+    end
   end
 
   def exec(recipe_path)
@@ -41,6 +63,9 @@ class Katte
 
     recipe = Katte::Recipe.load(recipe_path)
     node   = node_factory.create(recipe)
+
+    node.output << Katte::Plugins.output[:stdio] if params[:verbose]
+
     node.file_type.execute(node)
   end
 end

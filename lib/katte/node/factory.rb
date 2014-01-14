@@ -5,10 +5,7 @@ require 'katte/task_manager/sleeper'
 class Katte::Node
   class Factory
     def self.create(recipe)
-      output = (recipe.output || [:file]).map {|type|
-        Katte::Plugins.output[type]
-      }.compact
-
+      output = recipe.output.map {|o| Katte::Plugins.output[o]}
       params = {
         :name         => recipe.name,
         :path         => recipe.path,

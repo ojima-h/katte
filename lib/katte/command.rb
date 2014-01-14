@@ -11,7 +11,8 @@ class Katte
     }
 
     opt = OptionParser.new
-    opt.on('-d date') {|v| options[:date] = v }
+    opt.on('-d date') {|v| options[:datetime] = v }
+    opt.on('-v')      { options[:verbose] = true }
     opt.banner = "katte <command> [options]"
     opt.parse!(ARGV)
 
@@ -20,7 +21,7 @@ class Katte
 
     case command
     when 'run'
-      app = Katte.new(datetime: options[:date])
+      app = Katte.new(options)
 
       if files.empty?
         app.run

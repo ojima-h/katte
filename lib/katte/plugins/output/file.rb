@@ -5,8 +5,10 @@ class Katte::Plugins::Output
     name :file
 
     def out(node, data)
+      return data if data.empty?
+
       file = File.join(Katte.app.config.result_root,
-                       node.name,
+                       node.name + '.log',
                        Katte.app.env.to_hash['date'] + ".txt")
 
       FileUtils.makedirs(File.dirname(file))
@@ -15,7 +17,12 @@ class Katte::Plugins::Output
     end
 
     def err(node, data)
-      file = File.join(Katte.app.config.log_root, node.name, Katte.app.env.to_hash['date'] + ".txt")
+      return data if data.empty?
+
+      file = File.join(Katte.app.config.log_root,
+                       'recipes',
+                       node.name + '.log',
+                       Katte.app.env.to_hash['date'] + ".txt")
 
       FileUtils.makedirs(File.dirname(file))
 
