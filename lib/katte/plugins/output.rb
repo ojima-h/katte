@@ -4,10 +4,10 @@ class Katte::Plugins
     index :name
 
     def out(node, stream)
-      stream.each {|line| yield line }
+      stream
     end
     def err(node, stream)
-      stream.each {|line| yield line }
+      stream
     end
   end
 end
