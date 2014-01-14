@@ -1,5 +1,6 @@
 require 'find'
 require 'logger'
+require "katte/version"
 require 'katte/environment'
 require 'katte/config'
 require 'katte/plugins'

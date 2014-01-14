@@ -1,6 +1,4 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
-group :test do
-  gem "rspec", ">=2.14"
-  gem "debugger"
-end
+# Specify your gem's dependencies in katte.gemspec
+gemspec
