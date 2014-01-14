@@ -3,13 +3,19 @@ class Katte
     attr_accessor :name
     attr_accessor :path
     attr_accessor :file_type
-    attr_accessor :directive
+    attr_accessor :parents
+    attr_accessor :output
+    attr_accessor :period
+    attr_accessor :options
 
     def initialize(params)
       @name      = params[:name]
       @path      = params[:path]
       @file_type = params[:file_type]
-      @directive = params[:directive]
+      @parents   = params[:parents]
+      @output    = params[:output]  || []
+      @period    = params[:period]
+      @options   = params[:options] || {}
     end
 
     def self.load(path)
@@ -20,17 +26,34 @@ class Katte
 
       directive = parse(path, file_type)
 
+      parents = directive['require']
+      output  = directive['output'].map {|x|
+        x.split(',').map(&:strip).map(&:to_sym)
+      }.flatten
+      period  = directive['period'].last || 'day'
+
+      options = {}
+      directive['option'].each {|x|
+        x.split(',').each {|o|
+          k, v = o.split('=')
+          options[k.strip] = (v ? v.strip : true)
+        }
+      }
+
       new(:name      => m[:name],
           :path      => path,
           :file_type => file_type,
-          :directive => directive)
+          :parents   => parents,
+          :output    => output,
+          :period    => period,
+          :options   => options,)
     end
 
     def self.parse(path, file_type)
       comment_pattern   = /^#{file_type.comment_by}|^\s*$/
-      directive_pattern = /^#{file_type.comment_by}\s*(?<key>\w+)\s*(?<value>.+)$/
+      directive_pattern = /^#{file_type.comment_by}\s*(?<key>\w+):\s*(?<value>.+)$/
 
-      directive = {}
+      directive = Hash.new {|h,k| h[k] = [] }
       open(path) do |io|
         while line = io.gets
           line.chomp!
@@ -39,11 +62,10 @@ class Katte
 
           key, value = m[:key], m[:value]
 
-          directive[key] ||= []
-          directive[key] << value
+          directive[key] << value.strip
         end
-        directive
       end
+      directive
     end
 
     def self.path_pattern

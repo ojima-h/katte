@@ -1,5 +1,5 @@
 #!/bin/sh
 
-# require test/sample/sub
+# require: test/sample/sub
 
 echo 0

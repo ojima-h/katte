@@ -3,22 +3,19 @@ require 'katte/node/loader'
 
 class Katte
   class Node
-    %w(name path file_type output period task_manager options).each {|attr|
+    %w(name path parents file_type output period task_manager options).each {|attr|
       attr_accessor attr
     }
 
     def initialize(params)
       @name         = params[:name]
       @path         = params[:path]
+      @parents      = params[:parents]      || []
       @file_type    = params[:file_type]
-      @output       = params[:output]
+      @output       = params[:output]       || []
       @period       = params[:period]       || 'day'
       @task_manager = params[:task_manager] || Katte::TaskManager::Default.instance
       @options      = params[:options]      || {}
-    end
-
-    def parents
-      @options['require'] || []
     end
 
     def open

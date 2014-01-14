@@ -1,3 +1,3 @@
-# require custom:2
+# require: custom:2
 
 echo custom:2
