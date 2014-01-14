@@ -25,7 +25,7 @@ class Katte
       yield out_w, err_w
       [out_w, err_w].each {|io| io.close unless io.closed? }
 
-      out_a, err_a = out_r.to_a, err_r.to_a
+      out_a, err_a = out_r.to_a.join, err_r.to_a.join
       [out_r, err_r].each {|io| io.close unless io.closed? }
 
       @output.reduce(out_a) {|stream, o| o.out(self, stream) }

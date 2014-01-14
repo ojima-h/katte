@@ -7,9 +7,9 @@ class Katte::Plugins
         Class.new(Katte::Plugins::Output) {|klass|
           name :"test_#{i}"
           attr_reader :result
-          def out(node, stream)
-            (@result ||= []) << stream.join
-            stream
+          def out(node, data)
+            (@result ||= []) << data
+            data
           end
         }
       }

@@ -13,7 +13,7 @@ class Katte::Plugins
         file_type.simple_exec(node, 'bash', node.path)
 
         output = Katte::Plugins.output[:debug].history.pop
-        result = output[:out].to_a.join
+        result = output[:out]
 
         expect(result).to eq "0\n"
       end

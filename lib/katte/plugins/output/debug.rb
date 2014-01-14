@@ -6,10 +6,10 @@ class Katte::Plugins::Output
       @history ||= Queue.new
     end
 
-    def out(node, stream)
-      history.push(node: node, out: stream.to_enum)
+    def out(node, data)
+      history.push(node: node, out: data)
 
-      stream
+      data
     end
   end
 end

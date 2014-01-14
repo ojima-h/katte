@@ -3,11 +3,11 @@ class Katte::Plugins
     define_keyword :name
     index :name
 
-    def out(node, stream)
-      stream
+    def out(node, output)
+      output
     end
-    def err(node, stream)
-      stream
+    def err(node, output)
+      output
     end
   end
 end

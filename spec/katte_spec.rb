@@ -9,8 +9,7 @@ describe Katte do
       Katte.app.run
 
       result = []
-      result << Katte::Plugins.output[:debug].history.pop until Katte::Plugins.output[:debug].history.empty?
-      result.map! {|output| output[:out].to_a.join }
+      result << Katte::Plugins.output[:debug].history.pop[:out] until Katte::Plugins.output[:debug].history.empty?
 
       today = Date.today.strftime("%Y-%m-%d")
       ["#{today}\n", "0\n", "custom:1\n", "custom:2\n"].all? do |line|
