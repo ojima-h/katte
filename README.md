@@ -95,7 +95,7 @@ rubyレシピに `custom` オプションを指定することで、タスクの
     # require: custom_recipe:important
     cat /some/important/file
 
-`tag <tag>` でこのタスクの完了をタグ付きで通知します。
+`tag <tag>` で次のタスクの実行を開始します。
 `done` でこのタスクの実行を終了します。
 
 ## Contributing
