@@ -67,7 +67,7 @@ Or install it yourself as:
 拡張できます。
 
 記述例は `lib/katte/plugins/file_type/bash.rb` /
-`lib/katte/plugins/output/file.rb` を参照してください。
+`lib/katte/plugins/output/file.rb` を参考にしてください。
 
 ### カスタムレシピを記述する
 
