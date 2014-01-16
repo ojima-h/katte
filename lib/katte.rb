@@ -65,8 +65,6 @@ Summary:
     recipe = Katte::Recipe.load(recipe_path)
     node   = node_factory.create(recipe)
 
-    node.output << Katte::Plugins.output[:stdio]
-
     node.file_type.execute(node)
   end
 end
