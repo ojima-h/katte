@@ -26,6 +26,10 @@ class Katte::Node
         params[:file_type]     = Katte::Plugins.file_type[:custom]
       end
 
+      if Katte.app.options[:verbose] and not params[:output].map(&:name).include?(:stderr)
+        params[:output] << Katte::Plugins.output[:stderr]
+      end
+
       Katte::Node.new params
     end
   end

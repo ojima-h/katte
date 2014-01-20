@@ -1,6 +1,6 @@
 class Katte::Plugins::Output
-  class Stdio < Katte::Plugins::Output
-    name :stdio
+  class Stdoe < Katte::Plugins::Output
+    name :stdoe
 
     def out(node, data)
       STDIN.puts data

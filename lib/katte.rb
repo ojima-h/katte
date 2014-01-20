@@ -20,12 +20,14 @@ class Katte
   attr_reader :env
   attr_reader :config
   attr_reader :logger
+  attr_reader :options
 
-  def initialize(params = {})
-    @env    = Environment.new(params)
-    @config = Katte::Config.config
+  def initialize(options = {})
+    @env     = Environment.new(options)
+    @options = options
+    @config  = Katte::Config.config
 
-    @logger = if params[:verbose] || config.mode == 'test'
+    @logger = if options[:verbose] || config.mode == 'test'
                 Logger.new(STDOUT)
               else
                 Logger.new(File.join(@config.log_root, 'katte.log'), 'daily')
