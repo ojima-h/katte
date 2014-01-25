@@ -36,8 +36,9 @@ class Katte
   end
 
   def run
-    node_factory     = config.factory || Katte::Node::Factory
-    nodes            = Node::Loader.load(config.recipes_root, node_factory)
+    node_factory = config.factory || Katte::Node::Factory
+    nodes = Find.find(config.recipes_root).map(&node_factory.method(:load)).compact
+
     dependency_graph = DependencyGraph.new(nodes)
     filter           = Filter.new(datetime: env.datetime)
     driver           = Driver.new(dependency_graph, filter: filter)
