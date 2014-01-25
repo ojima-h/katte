@@ -46,8 +46,10 @@ echo hello
         expect(directive).to have_key 'require'
         expect(directive).to have_key 'option'
 
-        expect(directive['require']).to eq ['path/recipe']
-        expect(directive['option']).to  eq ['conf1', 'conf2', 'conf3']
+        expect(directive['require']).to eq [['path/recipe', ['xxx']]]
+        expect(directive['option']).to  eq [['conf1', ['p1', 'p2']],
+                                            ['conf2', []],
+                                            ['conf3', nil]]
       end
     end
   end

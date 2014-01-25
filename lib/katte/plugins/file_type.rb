@@ -30,9 +30,11 @@ class Katte::Plugins
           break unless     @comment_pattern.match(line)
           next  unless m = @directive_pattern.match(line)
 
-          key, value = m[:key], m[:value]
+          key    = m[:key]
+          value  = m[:value].strip
+          params = m[:params] && m[:params].split(',').map(&:strip)
 
-          directive[key] << value.strip
+          directive[key] << [value, params]
         end
       end
       directive

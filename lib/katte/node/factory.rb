@@ -20,16 +20,10 @@ class Katte::Node
 
       directive = file_type.parse(path)
 
-      parents = directive['require']
-      output  = directive['output'].map {|o| Katte::Plugins.output[o.to_sym]}
-      period  = directive['period'].last || 'day'
-      options = {}
-      directive['option'].each {|x|
-        x.split(',').each {|o|
-          k, v = o.split('=')
-          options[k.strip] = (v ? v.strip : true)
-        }
-      }
+      parents = directive['require'].map(&:first)
+      output  = directive['output'].map {|o| Katte::Plugins.output[o.first.to_sym]}
+      period  = (directive['period'].empty? ? 'day' : directive['period'].last)
+      options = Hash[directive['option'].map {|k, v| [k, v || true]}]
 
       params = {
         :name         => name,
