@@ -63,10 +63,7 @@ Summary:
 
   def exec(recipe_path)
     node_factory = config.factory || Katte::Node::Factory
-
-    recipe = Katte::Recipe.load(recipe_path)
-    node   = node_factory.create(recipe)
-
+    node = node_factory.load(recipe_path)
     node.file_type.execute(node)
   end
 end

@@ -3,8 +3,8 @@ require 'spec_helper'
 class Katte::Plugins::FileType
   describe Custom do
     before :all do
-      @recipe = Katte::Recipe.load(File.expand_path('../../../../recipes/custom.rb', __FILE__))
-      @node = Katte::Node::Factory.create @recipe
+      recipe_path = File.expand_path('../../../../recipes/custom.rb', __FILE__)
+      @node = Katte::Node::Factory.load(recipe_path)
     end
 
     describe "#execute" do
