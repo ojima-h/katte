@@ -24,7 +24,7 @@ class Katte
 
       file_type = Katte::Plugins.file_type[m[:ext]]
 
-      directive = parse(path, file_type)
+      directive = file_type.parse(path)
 
       parents = directive['require']
       output  = directive['output'].map {|x|
@@ -47,32 +47,6 @@ class Katte
           :output    => output,
           :period    => period,
           :options   => options,)
-    end
-
-    def self.parse(path, file_type)
-      comment_by = Regexp.escape(file_type.comment_by)
-      comment_pattern   = /^#{comment_by}|^\s*$/
-      directive_pattern = %r{
-        ^#{comment_by}\s*
-        (?<key>\w+)\s*:\s*          # key
-        (?<value>[^(\s]+)               # value
-        (\((?<params>[^)]*)\))?    # param (optional)
-        $
-      }x
-
-      directive = Hash.new {|h,k| h[k] = [] }
-      open(path) do |io|
-        while line = io.gets
-          line.chomp!
-          break unless     comment_pattern.match(line)
-          next  unless m = directive_pattern.match(line)
-
-          key, value = m[:key], m[:value]
-
-          directive[key] << value.strip
-        end
-      end
-      directive
     end
 
     def self.path_pattern
