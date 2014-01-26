@@ -2,7 +2,7 @@ require 'katte/node/factory'
 
 class Katte
   class Node
-    %w(name path parents file_type output period task_manager options).each {|attr|
+    %w(name path parents file_type output period task_manager options children).each {|attr|
       attr_accessor attr
     }
 
@@ -15,6 +15,12 @@ class Katte
       @period       = params[:period]       || 'day'
       @task_manager = params[:task_manager] || Katte::TaskManager::Default.instance
       @options      = params[:options]      || {}
+
+      @children     = []
+    end
+
+    def add_child(node)
+      @children << node
     end
 
     def open
