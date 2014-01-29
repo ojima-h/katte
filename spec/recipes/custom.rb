@@ -1,7 +1,7 @@
 # option: custom
 
-3.times do |i|
-  tag i
+2.times do |i|
+  tag "custom/sample_#{i+1}"
 end
 
 done

@@ -5,7 +5,6 @@ require 'katte/environment'
 require 'katte/config'
 require 'katte/plugins'
 require 'katte/node'
-require 'katte/dependency_graph'
 require 'katte/filter'
 require 'katte/driver'
 
@@ -39,9 +38,8 @@ class Katte
     node_factory = config.factory || Katte::Node::Factory
     nodes = Find.find(config.recipes_root).map(&node_factory.method(:load)).compact
 
-    dependency_graph = DependencyGraph.new(nodes)
     filter           = Filter.new(datetime: env.datetime)
-    driver           = Driver.new(dependency_graph, filter: filter)
+    driver           = Driver.new(nodes, filter: filter)
 
     driver.run
 

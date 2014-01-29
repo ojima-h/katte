@@ -1,9 +1,14 @@
+require 'katte/graph'
+
 class Katte
   class Driver
     attr_reader :filter
     attr_reader :summary
-    def initialize(dependency_graph, options = {})
-      @dependency_graph = dependency_graph
+    def initialize(nodes, options = {})
+      @nodes = nodes
+      Katte::Graph.new(nodes)
+      @nodes_list  = Hash[nodes.map {|node| [node.name, node.parents.length] }]
+      @nodes_index = Hash[nodes.map {|node| [node.name, node] }]
 
       @filter = options[:filter] || ->(_){ true }
 
@@ -19,9 +24,9 @@ class Katte
     end
 
     def run
-      return if @dependency_graph.empty?
+      return if @nodes_list.empty?
 
-      run_nodes(@dependency_graph.root)
+      run_nodes(@nodes.select{|n| n.parents.length.zero? })
 
       loop {
         method, *args = @queue.pop
@@ -45,25 +50,30 @@ class Katte
     def _done(node, *args)
       log(node, :success)
 
-      next_nodes = @dependency_graph.done(node)
-      return finish if @dependency_graph.empty?
+      @nodes_list.delete(node.name)
+      return finish if @nodes_list.empty?
 
-      run_nodes(next_nodes) unless next_nodes.nil?
+      node.children.each do |child|
+        @nodes_list[child.name] -= 1
+        child.run(self) if @nodes_list[child.name].zero?
+      end
     end
     def _fail(node, *args)
       log(node, :fail)
 
-      @dependency_graph.fail(node)
-      finish if @dependency_graph.empty?
+      @nodes_list.delete(node.name)
+      node.descendants.each {|dec| @nodes_list.delete(dec.name) }
+
+      finish if @nodes_list.empty?
     end
-    def _next(node, tag, *args)
-      next_nodes = @dependency_graph.next(node, tag)
-      run_nodes(next_nodes) unless next_nodes.nil?
+    def _next(node, child, *args)
+      @nodes_list[child] -= 1
+      @nodes_index[child].run(self) if @nodes_list[child].zero?
     end
     def _skip(node, *args)
       log(node, :next)
       
-      @dependency_graph.fail(node)
+      node.descendants.each {|dec| @nodes_list.delete(dec) }
       finish if @dependency_graph.empty?
     end
   end

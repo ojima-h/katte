@@ -54,5 +54,15 @@ class Katte
 
       @task_manager.run(self, driver)
     end
+    def descendants
+      Enumerator.new {|enum| _descendants(enum) }
+    end
+    def _descendants(enum)
+      children.each {|node|
+        enum << node
+        node._descendants(enum)
+      }
+      enum
+    end
   end
 end
