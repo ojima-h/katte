@@ -4,15 +4,20 @@ require 'katte/task_manager/sleeper'
 
 class Katte::Node
   class Factory
-    def self.path_pattern
-      return @path_pattern if @path_pattern
+    def initialize
       pattern_regexp = File.join(Katte.app.config.recipes_root, '(?<name>.+?)\.(?<ext>\w+)')
       @path_pattern = /^#{pattern_regexp}$/
+
+      @nodes = {}
     end
 
-    def self.load(path)
+    def nodes(name = nil)
+      name ? @nodes[name] : @nodes.values
+    end
+      
+    def load(path)
       return unless FileTest.file? path
-      return unless m = path_pattern.match(path)
+      return unless m = @path_pattern.match(path)
 
       name, ext = m[:name], m[:ext]
 
@@ -45,11 +50,30 @@ class Katte::Node
         params[:file_type]     = Katte::Plugins.file_type[:custom]
       end
 
-      if Katte.app.options[:verbose] and not params[:output].map(&:name).include?(:stderr)
-        params[:output] << Katte::Plugins.output[:stderr]
+      create(params)
+    end
+
+    def create(params)
+      node = Katte::Node.new params
+      @nodes[node.name] = node
+
+      @_cache ||= {} # connection cache
+
+      # connect self to parents if exist
+      node.parents.each do |parent|
+        if @nodes[parent]
+          @nodes[parent].children << node
+         else
+          (@_cache[parent] ||= []) << node
+        end
       end
 
-      Katte::Node.new params
+      # connect children to self
+      if children = @_cache.delete(node.name)
+        node.children.concat(children)
+      end
+
+      node
     end
   end
 end

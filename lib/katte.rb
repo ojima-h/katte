@@ -35,7 +35,7 @@ class Katte
   end
 
   def run
-    node_factory = config.factory || Katte::Node::Factory
+    node_factory = config.factory || Katte::Node::Factory.new
     nodes = Find.find(config.recipes_root).map(&node_factory.method(:load)).compact
 
     filter           = Filter.new(datetime: env.datetime)
@@ -61,7 +61,7 @@ Summary:
   end
 
   def exec(recipe_path)
-    node_factory = config.factory || Katte::Node::Factory
+    node_factory = config.factory || Katte::Node::Factory.new
     node = node_factory.load(recipe_path)
     node.file_type.execute(node)
   end

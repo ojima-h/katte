@@ -21,7 +21,7 @@ class Katte::Plugins
     end
 
     describe '#parse' do
-      around do |spec|
+      before :all do
         @recipe_path = Tempfile.open('sample_recipe') do |f|
           f.print <<-EOF
 # require: path/recipe(xxx)
@@ -33,11 +33,8 @@ echo hello
           EOF
           f.path
         end
-
-        spec.run
-
-        File.delete @recipe_path
       end
+      after(:all) { File.delete @recipe_path if File.exists? @recipe_path}
 
       it "parse recipe file" do
         file_type = Katte::Plugins.file_type["sh"]

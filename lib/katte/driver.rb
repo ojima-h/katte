@@ -1,12 +1,9 @@
-require 'katte/graph'
-
 class Katte
   class Driver
     attr_reader :filter
     attr_reader :summary
     def initialize(nodes, options = {})
       @nodes = nodes
-      Katte::Graph.new(nodes)
       @nodes_list  = Hash[nodes.map {|node| [node.name, node.parents.length] }]
       @nodes_index = Hash[nodes.map {|node| [node.name, node] }]
 
@@ -74,7 +71,7 @@ class Katte
       log(node, :next)
       
       node.descendants.each {|dec| @nodes_list.delete(dec) }
-      finish if @dependency_graph.empty?
+      finish if @nodes_list.empty?
     end
   end
 end

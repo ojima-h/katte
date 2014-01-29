@@ -4,7 +4,7 @@ class Katte::Plugins::FileType
   describe Custom do
     before :all do
       recipe_path = File.expand_path('../../../../recipes/custom.rb', __FILE__)
-      @node = Katte::Node::Factory.load(recipe_path)
+      @node = Katte::Node::Factory.new.load(recipe_path)
     end
 
     describe "#execute" do
