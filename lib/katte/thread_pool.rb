@@ -1,7 +1,11 @@
 require 'thread'
 
-class Katte::TaskManager
+class Katte
   class ThreadPool
+    def self.instance
+      @instance ||= new.tap(&:run)
+    end
+
     attr_reader :threads
     def initialize(threads_num = 4, logger = Katte.app.logger)
       @queue         = Queue.new

@@ -1,8 +1,9 @@
 require 'katte/node/factory'
+require 'katte/thread_pool'
 
 class Katte
   class Node
-    %w(name path parents file_type output period task_manager options children).each {|attr|
+    %w(name path parents file_type output period options children).each {|attr|
       attr_accessor attr
     }
 
@@ -13,7 +14,6 @@ class Katte
       @file_type    = params[:file_type]
       @output       = params[:output]       || []
       @period       = params[:period]       || 'day'
-      @task_manager = params[:task_manager] || Katte::TaskManager::Default.instance
       @options      = params[:options]      || {}
 
       @children     = []
@@ -52,7 +52,10 @@ class Katte
         return
       end
 
-      @task_manager.run(self, driver)
+      ThreadPool.instance.push {
+        result = file_type.execute(self)
+        result ? driver.done(self) : driver.fail(self)
+      }
     end
     def descendants
       Enumerator.new {|enum| _descendants(enum) }

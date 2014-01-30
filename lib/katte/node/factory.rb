@@ -1,6 +1,4 @@
 require 'pathname'
-require 'katte/task_manager/default'
-require 'katte/task_manager/sleeper'
 
 class Katte::Node
   class Factory
@@ -37,7 +35,6 @@ class Katte::Node
         :file_type    => file_type,
         :output       => output,
         :period       => period,
-        :task_manager => Katte::TaskManager::Default.instance,
         :options      => options,
       }
 

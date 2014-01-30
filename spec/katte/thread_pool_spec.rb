@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'logger'
 require 'stringio'
 
-class Katte::TaskManager
+class Katte
   describe ThreadPool do
     class Spy
       attr_reader :num_called
