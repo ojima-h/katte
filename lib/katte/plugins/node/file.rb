@@ -6,6 +6,7 @@ class Katte::Plugins::Node
     end
 
     def run(driver)
+      driver.done(self)
     end
   end
 end

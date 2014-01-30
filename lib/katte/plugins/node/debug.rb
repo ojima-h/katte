@@ -7,7 +7,7 @@ class Katte::Plugins::Node
     end
 
     def run(driver)
-      children.each {|child| driver.next(self, child) }
+      children.each {|child| driver.next(self, child.name) }
       driver.done(self)
     end
   end

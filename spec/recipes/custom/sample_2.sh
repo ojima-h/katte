@@ -1,3 +1,3 @@
-# require: custom(2)
+# require: debug
 
 echo custom:2

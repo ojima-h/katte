@@ -45,16 +45,10 @@ class Katte::Node
         params[:output] = [Katte::Plugins.output[:debug]]
       end
 
-      if options['custom']
-        params[:task_manager]  = Katte::TaskManager::Sleeper.instance
-        params[:file_type]     = Katte::Plugins.file_type[:custom]
-      end
-
       create(params)
     end
 
-    def create(params)
-      node = Katte::Node.new params
+    def add(node)
       @nodes[node.name] = node
 
       @_cache ||= {} # connection cache
@@ -72,7 +66,11 @@ class Katte::Node
       if children = @_cache.delete(node.name)
         node.children.concat(children)
       end
+    end
 
+    def create(params)
+      node = Katte::Node.new params
+      add(node)
       node
     end
   end
