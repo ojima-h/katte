@@ -3,6 +3,7 @@ class Katte::Plugins
     define_keyword :name
     index :name
 
+    def requires; @requires ||= []; end
     def parents ; @parents  ||= []; end
     def children; @children ||= []; end
 

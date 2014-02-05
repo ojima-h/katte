@@ -3,19 +3,19 @@ require 'katte/thread_pool'
 
 class Katte
   class Node
-    %w(name path parents file_type output period options children).each {|attr|
+    %w(name path file_type output period options parents children).each {|attr|
       attr_accessor attr
     }
 
     def initialize(params)
       @name         = params[:name]
       @path         = params[:path]
-      @parents      = params[:parents]      || []
       @file_type    = params[:file_type]
       @output       = params[:output]       || []
       @period       = params[:period]       || 'day'
       @options      = params[:options]      || {}
 
+      @parents      = []
       @children     = []
     end
 

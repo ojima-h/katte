@@ -14,11 +14,11 @@ class Katte
                      :options   => {'callback' => [callback]})
       factory.create(:name      => 'test_2',
                      :file_type => debug_plugin,
-                     :parents   => ['test_1'],
+                     :require   => ['test_1'],
                      :options   => {'callback' => [callback]})
       factory.create(:name      => 'test_3',
                      :file_type => debug_plugin,
-                     :parents   => ['test_2'],
+                     :require   => ['test_2'],
                      :options   => {'callback' => [callback]})
 
       driver = Driver.new(factory.nodes)
@@ -39,7 +39,7 @@ class Katte
                      :options   => {'callback' => [failure_callback]})
       factory.create(:name      => 'test_2',
                      :file_type => debug_plugin,
-                     :parents   => ['test_1'],
+                     :require   => ['test_1'],
                      :options   => {'callback' => [callback]})
       factory.create(:name      => 'test_3',
                      :file_type => debug_plugin,

@@ -23,15 +23,15 @@ class Katte::Node
 
       directive = file_type.parse(path)
 
-      parents = directive['require'].map(&:first)
-      output  = directive['output'].map {|o| Katte::Plugins.output[o.first.to_sym]}
-      period  = (directive['period'].empty? ? 'day' : directive['period'].last)
-      options = Hash[directive['option'].map {|k, v| [k, v || true]}]
+      requires = directive['require'].map(&:first)
+      output   = directive['output'].map {|o| Katte::Plugins.output[o.first.to_sym]}
+      period   = (directive['period'].empty? ? 'day' : directive['period'].last)
+      options  = Hash[directive['option'].map {|k, v| [k, v || true]}]
 
       params = {
         :name         => name,
         :path         => path,
-        :parents      => parents,
+        :require      => requires,
         :file_type    => file_type,
         :output       => output,
         :period       => period,
@@ -45,29 +45,31 @@ class Katte::Node
       create(params)
     end
 
-    def add(node)
+    def add(node, requires = [])
       @nodes[node.name] = node
 
       @_cache ||= {} # connection cache
 
       # connect self to parents if exist
-      node.parents.each do |parent|
-        if @nodes[parent]
-          @nodes[parent].children << node
+      requires.each do |req|
+        if @nodes[req]
+          node.parents << @nodes[req]
+          @nodes[req].children << node
          else
-          (@_cache[parent] ||= []) << node
+          (@_cache[req] ||= []) << node
         end
       end
 
       # connect children to self
       if children = @_cache.delete(node.name)
+        children.each {|c| c.parents << node }
         node.children.concat(children)
       end
     end
 
     def create(params)
       node = Katte::Node.new params
-      add(node)
+      add(node, params[:require] || [])
       node
     end
   end
