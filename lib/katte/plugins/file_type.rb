@@ -6,9 +6,7 @@ class Katte::Plugins
 
     def simple_exec(node, program, *args)
       node.open {|out, err|
-        pid = spawn(Katte.app.env.to_hash, program, *args, :out => out, :err => err)
-        _, status = Process.waitpid2(pid)
-        status.success?
+        system(Katte.app.env.to_hash, program, *args, :out => out, :err => err)
       }
     end
 
@@ -32,7 +30,7 @@ class Katte::Plugins
 
           key    = m[:key]
           value  = m[:value].strip
-          params = m[:params] && m[:params].split(',').map(&:strip)
+          params = m[:params] && m[:params].split(',').map(&:strip).map(&method(:convert_variable))
 
           directive[key] << [value, params]
         end
@@ -40,5 +38,9 @@ class Katte::Plugins
       directive
     end
 
+    def convert_variable(value)
+      # #{xx} というパターンを env['xx'] で置換する
+      value.gsub(/\#\{((?:\\\{|[^\{])+)\}/) {|m| Katte.app.env.to_hash[$1]}
+    end
   end
 end

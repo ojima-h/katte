@@ -2,6 +2,11 @@ require 'pathname'
 
 class Katte::Node
   class Factory
+    @@after_create_hook = nil
+    def self.after_create(&proc)
+      @@after_create_hook = proc
+    end
+
     def initialize
       pattern_regexp = File.join(Katte.app.config.recipes_root, '(?<name>.+?)\.(?<ext>\w+)')
       @path_pattern = /^#{pattern_regexp}$/
@@ -23,7 +28,7 @@ class Katte::Node
 
       directive = file_type.parse(path)
 
-      requires = directive['require'].map(&:first)
+      requires = directive['require']
       output   = directive['output'].map {|o| Katte::Plugins.output[o.first.to_sym]}
       period   = (directive['period'].empty? ? 'day' : directive['period'].last)
       options  = Hash[directive['option'].map {|k, v| [k, v || true]}]
@@ -45,31 +50,38 @@ class Katte::Node
       create(params)
     end
 
-    def add(node, requires = [])
+    def add(node, params = {})
       @nodes[node.name] = node
 
       @_cache ||= {} # connection cache
 
+      requires = params[:require] || []
+
       # connect self to parents if exist
-      requires.each do |req|
+      requires.each do |req, prm|
         if @nodes[req]
-          node.parents << @nodes[req]
-          @nodes[req].children << node
+          node.add_parent(@nodes[req], *prm)
+          @nodes[req].add_child(node, *prm)
          else
-          (@_cache[req] ||= []) << node
+          (@_cache[req] ||= []) << [node, prm]
         end
       end
 
       # connect children to self
       if children = @_cache.delete(node.name)
-        children.each {|c| c.parents << node }
-        node.children.concat(children)
+        children.each {|c, prm|
+          c.add_parent(node, *prm)
+          node.add_child(c, *prm)
+        }
       end
     end
 
     def create(params)
       node = Katte::Node.new params
-      add(node, params[:require] || [])
+
+      @@after_create_hook.call(node, params) if @@after_create_hook
+
+      add(node, params)
       node
     end
   end

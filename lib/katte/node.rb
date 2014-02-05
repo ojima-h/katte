@@ -1,8 +1,10 @@
+require 'katte/node/base'
 require 'katte/node/factory'
 require 'katte/thread_pool'
 
 class Katte
   class Node
+    include Node::Base
     %w(name path file_type output period options parents children).each {|attr|
       attr_accessor attr
     }
@@ -17,10 +19,6 @@ class Katte
 
       @parents      = []
       @children     = []
-    end
-
-    def add_child(node)
-      @children << node
     end
 
     def open
