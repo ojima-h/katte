@@ -35,18 +35,11 @@ class Katte
     end
 
     private
-    def log(node, result)
-      @summary[result] << node
-      Katte.app.logger.info("[#{result}] #{node.name}")
-    end
-
     def run_nodes(nodes)
       nodes.each {|node| node.run(self) }
     end
 
     def _done(node, *args)
-      log(node, :success)
-
       @nodes_list.delete(node.name)
       return finish if @nodes_list.empty?
 
@@ -56,8 +49,6 @@ class Katte
       end
     end
     def _fail(node, *args)
-      log(node, :fail)
-
       @nodes_list.delete(node.name)
       node.descendants.each {|dec| @nodes_list.delete(dec.name) }
 
@@ -68,8 +59,6 @@ class Katte
       @nodes_index[child].run(self) if @nodes_list[child].zero?
     end
     def _skip(node, *args)
-      log(node, :next)
-      
       node.descendants.each {|dec| @nodes_list.delete(dec) }
       finish if @nodes_list.empty?
     end

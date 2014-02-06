@@ -31,6 +31,8 @@ class Katte
       out_a, err_a = out_r.to_a.join, err_r.to_a.join
       [out_r, err_r].each {|io| io.close unless io.closed? }
 
+      Katte.app.logger.warn("#{self.name} -- result is empty") if out_a.empty?
+
       @output.reduce(out_a) {|stream, o| o.out(self, stream) }
       @output.reduce(err_a) {|stream, o| o.err(self, stream) }
 
@@ -51,7 +53,10 @@ class Katte
       end
 
       ThreadPool.instance.push {
+        Katte.app.logger.info("[start] #{self.name}")
         result = file_type.execute(self)
+        Katte.app.logger.info(sprintf("[%s] #{self.name}", (result ? "success" : "fail")))
+
         result ? driver.done(self) : driver.fail(self)
       }
     end

@@ -26,7 +26,7 @@ class Katte
     @options = options
     @config  = Katte::Config.config
 
-    @logger = if options[:verbose] || config.mode == 'test'
+    @logger = if STDOUT.tty?
                 Logger.new(STDOUT)
               else
                 Logger.new(File.join(@config.log_root, 'katte.log'), 'daily')

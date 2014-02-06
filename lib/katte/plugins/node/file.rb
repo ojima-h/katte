@@ -20,6 +20,8 @@ class Katte::Plugins::Node
             false
           end
         end
+
+	watching_files.each {|f| Katte.app.logger.info("wating: #{f}") }
         sleep duration * 60 unless watching_files.empty?
       end
           

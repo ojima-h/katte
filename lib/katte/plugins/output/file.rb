@@ -8,7 +8,7 @@ class Katte::Plugins::Output
       return data if data.empty?
 
       file = File.join(Katte.app.config.result_root,
-                       node.name + '.log',
+                       node.name + '.out',
                        Katte.app.env.to_hash['date'] + ".txt")
 
       FileUtils.makedirs(File.dirname(file))
