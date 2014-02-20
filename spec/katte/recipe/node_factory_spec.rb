@@ -1,15 +1,15 @@
 require 'spec_helper'
 require 'stringio'
 
-class Katte::Node
-  describe Factory do
+module Katte::Recipe
+  describe NodeFactory do
     before :all do
       @recipe_path = File.join(Katte.app.config.recipes_root, 'test/sample.sh')
     end
 
     describe "#load" do
       it "returns node object" do
-        factory = Katte::Node::Factory.new
+        factory = Katte::Recipe::NodeFactory.new
         node = factory.load(@recipe_path)
         expect(node.name).to eq 'test/sample'
         expect(node.file_type).to be_respond_to :execute
@@ -19,7 +19,7 @@ class Katte::Node
 
     describe "#create" do
       before :all do
-        @factory = Katte::Node::Factory.new
+        @factory = Katte::Recipe::NodeFactory.new
         @factory.create(name: "a")
         @factory.create(name: "b")
         @factory.create(name: "c", require: ["b", "e"])

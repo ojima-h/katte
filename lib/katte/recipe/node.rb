@@ -1,11 +1,12 @@
 require 'katte/node/base'
-require 'katte/node/factory'
+require 'katte/recipe/node_factory'
 require 'katte/thread_pool'
 
-class Katte
+module Katte::Recipe
   class Node
-    include Node::Base
-    %w(name path file_type output period options parents children).each {|attr|
+    include Katte::Node::Base
+
+    %w(name path file_type output period options).each {|attr|
       attr_accessor attr
     }
 
@@ -52,7 +53,7 @@ class Katte
         return
       end
 
-      ThreadPool.instance.push {
+      Katte::ThreadPool.instance.push {
         Katte.app.logger.info("[start] #{self.name}")
         result = file_type.execute(self)
         Katte.app.logger.info(sprintf("[%s] #{self.name}", (result ? "success" : "fail")))

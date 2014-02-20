@@ -17,7 +17,7 @@ class Katte::Plugins
     end
 
     it "puts to all output plugins" do
-      node = Katte::Node.new(output: @plugins)
+      node = Katte::Recipe::Node.new(output: @plugins)
       node.open {|out, err|
         out.puts "a"
       }

@@ -1,7 +1,7 @@
 require 'pathname'
 
-class Katte::Node
-  class Factory
+module Katte::Recipe
+  class NodeFactory
     @@after_create_hook = nil
     def self.after_create(&proc)
       @@after_create_hook = proc
@@ -28,10 +28,10 @@ class Katte::Node
 
       directive = file_type.parse(path)
 
-      requires = directive['require']
-      output   = directive['output'].map {|o| Katte::Plugins.output[o.first.to_sym]}
-      period   = (directive['period'].empty? ? 'day' : directive['period'].last)
-      options  = Hash[directive['option'].map {|k, v| [k, v || true]}]
+      requires   = directive['require']
+      output     = directive['output'].map {|o| Katte::Plugins.output[o.first.to_sym]}
+      period     = (directive['period'].empty? ? 'day' : directive['period'].last)
+      options    = Hash[directive['option'].map {|k, v| [k, v || true]}]
 
       params = {
         :name         => name,
@@ -77,7 +77,7 @@ class Katte::Node
     end
 
     def create(params)
-      node = Katte::Node.new params
+      node = Node.new params
 
       @@after_create_hook.call(node, params) if @@after_create_hook
 

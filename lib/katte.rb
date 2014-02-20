@@ -4,9 +4,9 @@ require "katte/version"
 require 'katte/environment'
 require 'katte/config'
 require 'katte/plugins'
-require 'katte/node'
 require 'katte/filter'
 require 'katte/driver'
+require 'katte/recipe'
 
 class Katte
   def self.new(params = {})
@@ -35,7 +35,7 @@ class Katte
   end
 
   def run
-    node_factory = config.factory || Katte::Node::Factory.new
+    node_factory = config.factory || Katte::Recipe::NodeFactory.new
     Find.find(config.recipes_root).each(&node_factory.method(:load))
     Katte::Plugins.node.values.each(&node_factory.method(:add))
 
@@ -62,7 +62,7 @@ Summary:
   end
 
   def exec(recipe_path)
-    node_factory = config.factory || Katte::Node::Factory.new
+    node_factory = config.factory || Katte::Recipe::NodeFactory.new
     node = node_factory.load(recipe_path)
     Katte::Plugins.node.each {|_, n|  node_factory.add(n) }
 

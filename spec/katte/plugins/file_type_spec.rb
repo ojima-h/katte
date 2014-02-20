@@ -6,7 +6,7 @@ class Katte::Plugins
     describe "#simple_exec" do
       before(:each) { Katte::Plugins.output[:debug].history.clear }
       it "execute shell script" do
-        node = Katte::Node.new(:name   => 'test/sample',
+        node = Katte::Recipe::Node.new(:name   => 'test/sample',
                                :path   => File.expand_path('../../../recipes/test/sample.sh', __FILE__),
                                :output => [Katte::Plugins.output[:debug]])
 
