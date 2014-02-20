@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'stringio'
 
 module Katte::Recipe
   describe NodeFactory do
@@ -19,6 +18,7 @@ module Katte::Recipe
 
     describe "#create" do
       before :all do
+        Katte::Node.clear
         @factory = Katte::Recipe::NodeFactory.new
         @factory.create(name: "a")
         @factory.create(name: "b")
@@ -27,17 +27,17 @@ module Katte::Recipe
       end
 
       it "register all nodes" do
-        expect(@factory.nodes.map(&:name)).to eq %w(a b c d)
+        expect(Katte::Node.all.map(&:name)).to eq %w(a b c d)
       end
 
       it "connect parents and childs" do
-        expect(@factory.nodes("b").children.map(&:name)).to eq %w(c d)
-        expect(@factory.nodes("c").parents.map(&:name)).to eq %w(b)
+        expect(Katte::Node.find("b").children.map(&:name)).to eq %w(c d)
+        expect(Katte::Node.find("c").parents.map(&:name)).to eq %w(b)
       end
 
       it "ignores unregistered nodes" do
-        expect(@factory.nodes("c").parents.map(&:name)).not_to include "e"
-        expect(@factory.nodes("c").parents).not_to include "e"
+        expect(Katte::Node.find("c").parents.map(&:name)).not_to include "e"
+        expect(Katte::Node.find("c").parents).not_to include "e"
       end
     end
   end

@@ -2,6 +2,7 @@ require 'spec_helper'
 
 class Katte
   describe Driver do
+    before(:each) { Katte::Node.clear }
     it 'excecute each node according to dependency graph' do
       call_log = []
       callback = Proc.new {|node| call_log << node.name}
@@ -21,7 +22,7 @@ class Katte
                      :require   => ['test_2'],
                      :options   => {'callback' => [callback]})
 
-      driver = Driver.new(factory.nodes)
+      driver = Driver.new(Node.all)
       driver.run
 
       expect(call_log).to eq %w(test_1 test_2 test_3)
@@ -45,7 +46,7 @@ class Katte
                      :file_type => debug_plugin,
                      :options   => {'callback' => [callback]})
 
-      driver = Driver.new(factory.nodes)
+      driver = Driver.new(Node.all)
       driver.run
 
       expect(call_log).to eq ["test_3"]

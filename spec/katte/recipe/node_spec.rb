@@ -1,6 +1,7 @@
 require 'spec_helper'
 module Katte::Recipe
   describe Node do
+    before(:each) { Katte::Node.clear }
     describe "#descendants" do
       it "collect all descendants" do
         factory = Katte::Recipe::NodeFactory.new

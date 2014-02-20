@@ -1,5 +1,6 @@
 require 'find'
 require 'logger'
+require 'katte/node'
 require "katte/version"
 require 'katte/environment'
 require 'katte/config'
@@ -37,10 +38,10 @@ class Katte
   def run
     node_factory = config.factory || Katte::Recipe::NodeFactory.new
     Find.find(config.recipes_root).each(&node_factory.method(:load))
-    Katte::Plugins.node.values.each(&node_factory.method(:add))
+    Katte::Plugins.node.values.each(&Node.method(:add))
 
     filter           = Filter.new(datetime: env.datetime)
-    driver           = Driver.new(node_factory.nodes, filter: filter)
+    driver           = Driver.new(Node.all, filter: filter)
 
     driver.run
 
@@ -64,7 +65,7 @@ Summary:
   def exec(recipe_path)
     node_factory = config.factory || Katte::Recipe::NodeFactory.new
     node = node_factory.load(recipe_path)
-    Katte::Plugins.node.each {|_, n|  node_factory.add(n) }
+    Katte::Plugins.node.each {|_, n|  Node.add(n) }
 
     node.file_type.execute(node)
   end

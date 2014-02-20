@@ -3,7 +3,10 @@ require 'date'
 
 describe Katte do
   describe "#run" do
-    before(:each) { Katte::Plugins.output[:debug].history.clear }
+    before(:each) {
+      Katte::Node.clear
+      Katte::Plugins.output[:debug].history.clear
+    }
 
     it "execute whole node" do
       Katte.app.run

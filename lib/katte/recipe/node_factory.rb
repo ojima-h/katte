@@ -14,10 +14,6 @@ module Katte::Recipe
       @nodes = {}
     end
 
-    def nodes(name = nil)
-      name ? @nodes[name] : @nodes.values
-    end
-      
     def load(path)
       return unless FileTest.file? path
       return unless m = @path_pattern.match(path)
@@ -50,38 +46,13 @@ module Katte::Recipe
       create(params)
     end
 
-    def add(node, params = {})
-      @nodes[node.name] = node
-
-      @_cache ||= {} # connection cache
-
-      requires = params[:require] || []
-
-      # connect self to parents if exist
-      requires.each do |req, prm|
-        if @nodes[req]
-          node.add_parent(@nodes[req], *prm)
-          @nodes[req].add_child(node, *prm)
-         else
-          (@_cache[req] ||= []) << [node, prm]
-        end
-      end
-
-      # connect children to self
-      if children = @_cache.delete(node.name)
-        children.each {|c, prm|
-          c.add_parent(node, *prm)
-          node.add_child(c, *prm)
-        }
-      end
-    end
-
     def create(params)
-      node = Node.new params
+      node = Katte::Recipe::Node.new params
 
       @@after_create_hook.call(node, params) if @@after_create_hook
 
-      add(node, params)
+      Katte::Node.add(node, params)
+
       node
     end
   end
