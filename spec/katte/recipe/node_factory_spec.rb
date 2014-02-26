@@ -9,6 +9,7 @@ module Katte::Recipe
     describe "#load" do
       it "returns node object" do
         factory = Katte::Recipe::NodeFactory.new
+
         node = factory.load(@recipe_path)
         expect(node.name).to eq 'test/sample'
         expect(node.file_type).to be_respond_to :execute

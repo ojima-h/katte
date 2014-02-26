@@ -1,16 +1,6 @@
-class Katte::Plugins
-  class Node < Base
-    define_keyword :name
-    index :name
+module Katte::Plugins::Node
+  extend Katte::Plugins::Base
 
-    def requires; @requires ||= []; end
-    def parents ; @parents  ||= []; end
-    def children; @children ||= []; end
-
-    def add_child(node)
-    end
-
-    def run(driver)
-    end
-  end
+  define_keyword :name
+  index :name
 end

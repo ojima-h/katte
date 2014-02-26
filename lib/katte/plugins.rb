@@ -3,12 +3,7 @@ require 'katte/plugins/file_type'
 require 'katte/plugins/output'
 require 'katte/plugins/node'
 
-class Katte
-  class Plugins
-    def self.file_type; FileType.plugins; end
-    def self.output   ; Output.plugins  ; end
-    def self.node     ; Node.plugins    ; end
-  end
+module Katte::Plugins
 end
 
 Dir[File.expand_path('../plugins/file_type/*.rb', __FILE__),

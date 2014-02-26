@@ -36,9 +36,7 @@ class Katte
   end
 
   def run
-    node_factory = config.factory || Katte::Recipe::NodeFactory.new
-    Find.find(config.recipes_root).each(&node_factory.method(:load))
-    Katte::Plugins.node.values.each(&Node.method(:add))
+    load_nodes
 
     filter           = Filter.new(datetime: env.datetime)
     driver           = Driver.new(Node.all, filter: filter)
@@ -69,4 +67,19 @@ Summary:
 
     node.file_type.execute(node)
   end
+
+  private
+  def load_nodes
+    load_builtin_nodes
+    load_recipes
+  end
+  def load_builtin_nodes
+    Node.add Plugins::Node::File.new
+    Node.add Plugins::Node::Debug.new
+  end
+  def load_recipes
+    node_factory = config.factory || Katte::Recipe::NodeFactory.new
+    Find.find(config.recipes_root).each(&node_factory.method(:load))
+  end
+
 end

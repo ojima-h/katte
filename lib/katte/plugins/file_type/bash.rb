@@ -1,10 +1,9 @@
-class Katte::Plugins::FileType
-  class Bash < Katte::Plugins::FileType
-    extname    'sh'
-    comment_by '#'
+class Katte::Plugins::FileType::Bash
+  include Katte::Plugins::FileType
+  extname    'sh'
+  comment_by '#'
 
-    def execute(node)
-      simple_exec(node, 'bash', node.path)
-    end
+  def execute(node)
+    simple_exec(node, 'bash', node.path)
   end
 end

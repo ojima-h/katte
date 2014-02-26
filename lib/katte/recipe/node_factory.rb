@@ -20,7 +20,7 @@ module Katte::Recipe
 
       name, ext = m[:name], m[:ext]
 
-      file_type = Katte::Plugins.file_type[ext]
+      file_type = Katte::Recipe::FileType.find(ext)
 
       directive = file_type.parse(path)
 
@@ -40,7 +40,7 @@ module Katte::Recipe
       }
 
       if Katte.app.config.mode == 'test'
-        params[:output] = [Katte::Plugins.output[:debug]]
+        params[:output] = [Katte::Plugins::Output.find(:debug)]
       end
 
       create(params)

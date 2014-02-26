@@ -1,14 +1,14 @@
-class Katte::Plugins::FileType
-  class Debug < Katte::Plugins::FileType
-    extname :debug
+class Katte::Plugins::FileType::Debug
+  include Katte::Plugins::FileType
 
-    class Abort < StandardError; end
+  extname :debug
 
-    def execute(node)
-      node.options['callback'].each {|cb| cb.call(node) }
-      return true
-    rescue Abort => e
-      return false
-    end
+  class Abort < StandardError; end
+
+  def execute(node)
+    node.options['callback'].each {|cb| cb.call(node) }
+    return true
+  rescue Abort => e
+    return false
   end
 end

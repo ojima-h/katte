@@ -1,3 +1,4 @@
+require 'katte/node/base'
 module Katte::Node
   class <<self
     def nodes

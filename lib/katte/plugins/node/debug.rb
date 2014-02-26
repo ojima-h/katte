@@ -1,14 +1,11 @@
-class Katte::Plugins::Node
-  class Debug < Katte::Plugins::Node
-    name 'debug'
+class Katte::Plugins::Node::Debug
+  include Katte::Node::Base
+  include Katte::Plugins::Node
 
-    def add_child(node, *params)
-      children << node
-    end
+  name 'debug'
 
-    def run(driver)
-      children.each {|child| driver.next(self, child.name) }
-      driver.done(self)
-    end
+  def run(driver)
+    children.each {|child| driver.next(self, child.name) }
+    driver.done(self)
   end
 end

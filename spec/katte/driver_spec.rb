@@ -7,7 +7,7 @@ class Katte
       call_log = []
       callback = Proc.new {|node| call_log << node.name}
 
-      debug_plugin = Katte::Plugins.file_type[:debug]
+      debug_plugin = Katte::Plugins::FileType::Debug.new
 
       factory = Katte::Recipe::NodeFactory.new
       factory.create(:name      => 'test_1',
@@ -32,7 +32,7 @@ class Katte
       call_log = []
       callback = Proc.new {|node| call_log << node.name }
       failure_callback = Proc.new{|node| raise Katte::Plugins::FileType::Debug::Abort}
-      debug_plugin = Katte::Plugins.file_type[:debug]
+      debug_plugin = Katte::Plugins::FileType::Debug.new
 
       factory = Katte::Recipe::NodeFactory.new
       factory.create(:name      =>  'test_1',

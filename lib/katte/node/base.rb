@@ -5,6 +5,9 @@ module Katte::Node
     def name
       raise AbstractNodeException, "method #name must be implemented"
     end
+    def requires
+      @requires ||= []
+    end
 
     # execution filter
     # return whether this node to run
@@ -20,7 +23,7 @@ module Katte::Node
       @children ||= []
     end
     def add_child(node, *params)
-      (@children ||= []) << node
+      children << node
     end
 
     # accessor for parents
@@ -28,7 +31,7 @@ module Katte::Node
       @parents ||= []
     end
     def add_parent(node, *params)
-      (@parents ||= []) << node
+      parents << node
     end
 
     def descendants
