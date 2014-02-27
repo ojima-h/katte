@@ -36,6 +36,10 @@ class Katte
     @logger.level = Logger::WARN if config.mode == 'test'
   end
 
+  def run
+    (@runner ||= Katte::Runner.new).run
+  end
+
   def exec(recipe_path)
     node_factory = config.factory || Katte::Recipe::NodeFactory.new
     node = node_factory.load(recipe_path)
