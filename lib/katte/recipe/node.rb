@@ -13,6 +13,7 @@ module Katte::Recipe
     def initialize(params)
       @name         = params[:name]
       @path         = params[:path]
+      @requires     = params[:require]
       @file_type    = params[:file_type]
       @output       = params[:output]       || []
       @period       = params[:period]       || 'day'
@@ -43,11 +44,6 @@ module Katte::Recipe
     end
 
     def run(driver)
-      unless driver.filter.call(period: @period)
-        driver.skip(self)
-        return
-      end
-
       unless @file_type
         Katte.app.logger.error("no file type specified for %s" % @name)
         return

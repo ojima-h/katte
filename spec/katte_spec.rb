@@ -4,7 +4,6 @@ require 'date'
 describe Katte do
   describe "#run" do
     before(:each) {
-      Katte::Node.clear
       Katte::Plugins::Output.find(:debug).history.clear
     }
 

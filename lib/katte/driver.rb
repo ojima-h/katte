@@ -1,13 +1,10 @@
 class Katte
   class Driver
-    attr_reader :filter
     attr_reader :summary
     def initialize(nodes, options = {})
       @nodes = nodes
       @nodes_list  = Hash[nodes.map {|node| [node.name, node.parents.length] }]
       @nodes_index = Hash[nodes.map {|node| [node.name, node] }]
-
-      @filter = options[:filter] || ->(_){ true }
 
       @queue = Queue.new
 

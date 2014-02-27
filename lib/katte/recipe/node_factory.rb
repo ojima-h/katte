@@ -51,8 +51,6 @@ module Katte::Recipe
 
       @@after_create_hook.call(node, params) if @@after_create_hook
 
-      Katte::Node.add(node, params)
-
       node
     end
   end
