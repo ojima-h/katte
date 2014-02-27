@@ -8,6 +8,7 @@ require 'katte/plugins'
 require 'katte/filter'
 require 'katte/driver'
 require 'katte/recipe'
+require 'katte/runner'
 
 class Katte
   def self.new(params = {})
@@ -35,54 +36,10 @@ class Katte
     @logger.level = Logger::WARN if config.mode == 'test'
   end
 
-  def run
-    nodes = load_nodes
-
-    summary = Driver.run nodes
-
-    unless config.mode == 'test'
-      File.open(File.join(@config.log_root, 'summary.log'), 'w') do |file|
-        file.print <<-EOF
-Summary:
-  success: #{summary[:success].length}
-  fail:    #{summary[:fail].length}
-  skip:    #{summary[:skip].length}
-        EOF
-      end
-      File.open(File.join(@config.log_root, 'failed.log'), 'w') do |file|
-        summary[:fail].each do |node|
-          file.puts node.name
-        end
-      end
-    end
-  end
-
   def exec(recipe_path)
     node_factory = config.factory || Katte::Recipe::NodeFactory.new
     node = node_factory.load(recipe_path)
 
     node.file_type.execute(node)
-  end
-
-  private
-  def load_nodes
-    nodes = Node::Collection.new
-    load_builtin_nodes.each {|node| nodes.add node }
-    load_recipes.each       {|node| nodes.add node }
-    nodes
-  end
-  def load_builtin_nodes
-    [
-     Plugins::Node::File.new,
-     Plugins::Node::Debug.new,
-    ]
-  end
-  def load_recipes
-    node_factory = config.factory || Katte::Recipe::NodeFactory.new
-    Find.find(config.recipes_root).select {|file|
-      File.file? file
-    }.map {|file|
-      node_factory.load(file)
-    }
   end
 end
