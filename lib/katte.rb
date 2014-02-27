@@ -38,22 +38,19 @@ class Katte
   def run
     nodes = load_nodes
 
-    filter           = Filter.new(datetime: env.datetime)
-    driver           = Driver.new(nodes, filter: filter)
-
-    driver.run
+    summary = Driver.run nodes
 
     unless config.mode == 'test'
       File.open(File.join(@config.log_root, 'summary.log'), 'w') do |file|
         file.print <<-EOF
 Summary:
-  success: #{driver.summary[:success].length}
-  fail:    #{driver.summary[:fail].length}
-  skip:    #{driver.summary[:skip].length}
+  success: #{summary[:success].length}
+  fail:    #{summary[:fail].length}
+  skip:    #{summary[:skip].length}
         EOF
       end
       File.open(File.join(@config.log_root, 'failed.log'), 'w') do |file|
-        driver.summary[:fail].each do |node|
+        summary[:fail].each do |node|
           file.puts node.name
         end
       end

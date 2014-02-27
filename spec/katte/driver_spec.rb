@@ -24,8 +24,7 @@ class Katte
 
       node_collection.connect
 
-      driver = Driver.new(node_collection)
-      driver.run
+      Driver.run(node_collection)
 
       expect(call_log).to eq %w(test_1 test_2 test_3)
     end
@@ -51,8 +50,7 @@ class Katte
                          
       node_collection.connect
 
-      driver = Driver.new(node_collection)
-      driver.run
+      Driver.run(node_collection)
 
       expect(call_log).to eq ["test_3"]
     end
