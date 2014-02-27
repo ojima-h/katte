@@ -1,5 +1,8 @@
 class Katte
   class Runner
+    require 'katte/runner/callback'
+    include Katte::Runner::Callback
+
     def run
       load_nodes
 
@@ -16,6 +19,8 @@ class Katte
     def load_nodes
       @nodes = Katte::Node::Collection.new
       (builtin_nodes + recipe_nodes).each {|node| @nodes << node }
+
+      call_after_callbacks(:load_nodes, @nodes)
     end
     def builtin_nodes
       Plugins::Node.plugins.values
