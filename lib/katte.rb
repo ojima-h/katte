@@ -1,14 +1,5 @@
 require 'find'
 require 'logger'
-require 'katte/node'
-require "katte/version"
-require 'katte/environment'
-require 'katte/config'
-require 'katte/plugins'
-require 'katte/filter'
-require 'katte/driver'
-require 'katte/recipe'
-require 'katte/runner'
 
 class Katte
   def self.new(params = {})
@@ -47,3 +38,13 @@ class Katte
     node.file_type.execute(node)
   end
 end
+
+require 'katte/node'
+require "katte/version"
+require 'katte/environment'
+require 'katte/config'
+require 'katte/plugins'
+require 'katte/filter'
+require 'katte/driver'
+require 'katte/recipe'
+require 'katte/runner'
