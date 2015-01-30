@@ -1,23 +1,38 @@
-class Katte::Plugins
-  class Base
-    def self.define_keyword(keyword)
-      define_singleton_method(keyword) {|value|
+module Katte::Plugins
+  module Base
+    def class_methods
+      @class_methods ||= Module.new
+    end
+    private :class_methods
+
+    def included(klass)
+      klass.extend class_methods
+    end
+
+    def index(keyword = nil)
+      return @index unless keyword
+      @index = keyword
+    end
+    def define_keyword(keyword)
+      klass = self
+
+      class_methods.send(:define_method, keyword) {|value|
         define_method(keyword) { value }
+
+        if klass.index == keyword
+          klass.register(value, self.new)
+        end
       }
     end
 
-    def self.index(keyword)
-      @index = keyword
+    def plugins
+      @plugins ||= {}
     end
-
-    def self.inherited(child)
-      (@children ||= []) << child
+    def register(index, plugin)
+      plugins[index] = plugin
     end
-    def self.plugins
-      @plugins ||= Hash[@children.map {|child|
-        plugin = child.new
-        [plugin.send(@index), plugin] if plugin.respond_to? @index
-      }.compact]
+    def find(index)
+      plugins[index]
     end
   end
 end

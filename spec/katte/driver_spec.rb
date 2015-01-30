@@ -6,23 +6,25 @@ class Katte
       call_log = []
       callback = Proc.new {|node| call_log << node.name}
 
-      debug_plugin = Katte::Plugins.file_type[:debug]
+      debug_plugin = Katte::Plugins::FileType::Debug.new
 
-      factory = Katte::Node::Factory.new
-      factory.create(:name      => 'test_1',
-                     :file_type => debug_plugin,
-                     :options   => {'callback' => [callback]})
-      factory.create(:name      => 'test_2',
-                     :file_type => debug_plugin,
-                     :require   => ['test_1'],
-                     :options   => {'callback' => [callback]})
-      factory.create(:name      => 'test_3',
-                     :file_type => debug_plugin,
-                     :require   => ['test_2'],
-                     :options   => {'callback' => [callback]})
+      factory = Katte::Recipe::NodeFactory.new
+      node_collection = Katte::Node::Collection.new
+      node_collection << factory.create(:name      => 'test_1',
+                                        :file_type => debug_plugin,
+                                        :options   => {'callback' => [callback]})
+      node_collection << factory.create(:name      => 'test_2',
+                                        :file_type => debug_plugin,
+                                        :require   => ['test_1'],
+                                        :options   => {'callback' => [callback]})
+      node_collection << factory.create(:name      => 'test_3',
+                                        :file_type => debug_plugin,
+                                        :require   => ['test_2'],
+                                        :options   => {'callback' => [callback]})
 
-      driver = Driver.new(factory.nodes)
-      driver.run
+      node_collection.connect
+
+      Driver.run(node_collection)
 
       expect(call_log).to eq %w(test_1 test_2 test_3)
     end
@@ -31,22 +33,24 @@ class Katte
       call_log = []
       callback = Proc.new {|node| call_log << node.name }
       failure_callback = Proc.new{|node| raise Katte::Plugins::FileType::Debug::Abort}
-      debug_plugin = Katte::Plugins.file_type[:debug]
+      debug_plugin = Katte::Plugins::FileType::Debug.new
 
-      factory = Katte::Node::Factory.new
-      factory.create(:name      =>  'test_1',
-                     :file_type => debug_plugin,
-                     :options   => {'callback' => [failure_callback]})
-      factory.create(:name      => 'test_2',
-                     :file_type => debug_plugin,
-                     :require   => ['test_1'],
-                     :options   => {'callback' => [callback]})
-      factory.create(:name      => 'test_3',
-                     :file_type => debug_plugin,
-                     :options   => {'callback' => [callback]})
+      factory = Katte::Recipe::NodeFactory.new
+      node_collection = Katte::Node::Collection.new
+      node_collection << factory.create(:name      =>  'test_1',
+                                        :file_type => debug_plugin,
+                                        :options   => {'callback' => [failure_callback]})
+      node_collection << factory.create(:name      => 'test_2',
+                                        :file_type => debug_plugin,
+                                        :require   => ['test_1'],
+                                        :options   => {'callback' => [callback]})
+      node_collection << factory.create(:name      => 'test_3',
+                                        :file_type => debug_plugin,
+                                        :options   => {'callback' => [callback]})
+                         
+      node_collection.connect
 
-      driver = Driver.new(factory.nodes)
-      driver.run
+      Driver.run(node_collection)
 
       expect(call_log).to eq ["test_3"]
     end

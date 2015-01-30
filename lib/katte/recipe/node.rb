@@ -1,17 +1,19 @@
 require 'katte/node/base'
-require 'katte/node/factory'
+require 'katte/recipe/node_factory'
 require 'katte/thread_pool'
 
-class Katte
+module Katte::Recipe
   class Node
-    include Node::Base
-    %w(name path file_type output period options parents children).each {|attr|
+    include Katte::Node::Base
+
+    %w(name path file_type output period options).each {|attr|
       attr_accessor attr
     }
 
     def initialize(params)
       @name         = params[:name]
       @path         = params[:path]
+      @requires     = params[:require]
       @file_type    = params[:file_type]
       @output       = params[:output]       || []
       @period       = params[:period]       || 'day'
@@ -25,22 +27,16 @@ class Katte
       out_r, out_w = IO.pipe
       err_r, err_w = IO.pipe
 
-      oe = {}
-      t = Thread.new(oe) {|oe|
-        oe[:out] = out_r.to_a.join
-        oe[:err] = err_r.to_a.join
-        [out_r, err_r].each {|io| io.close unless io.closed? }
-      }
-
       result = yield out_w, err_w
+
       [out_w, err_w].each {|io| io.close unless io.closed? }
+      out_a, err_a = out_r.to_a.join, err_r.to_a.join
+      [out_r, err_r].each {|io| io.close unless io.closed? }
 
-      t.join
+      Katte.app.logger.warn("#{self.name} -- result is empty") if out_a.empty?
 
-      Katte.app.logger.warn("#{self.name} -- result is empty") if oe[:out].empty?
-
-      @output.reduce(oe[:out]) {|stream, o| o.out(self, stream) }
-      @output.reduce(oe[:err]) {|stream, o| o.err(self, stream) }
+      @output.reduce(out_a) {|stream, o| o.out(self, stream) }
+      @output.reduce(err_a) {|stream, o| o.err(self, stream) }
 
       result
     ensure
@@ -48,17 +44,12 @@ class Katte
     end
 
     def run(driver)
-      unless driver.filter.call(period: @period)
-        driver.skip(self)
-        return
-      end
-
       unless @file_type
         Katte.app.logger.error("no file type specified for %s" % @name)
         return
       end
 
-      ThreadPool.instance.push {
+      Katte::ThreadPool.instance.push {
         Katte.app.logger.info("[start] #{self.name}")
         result = file_type.execute(self)
         Katte.app.logger.info(sprintf("[%s] #{self.name}", (result ? "success" : "fail")))
@@ -78,6 +69,3 @@ class Katte
     end
   end
 end
-
-require 'katte/node/base'
-require 'katte/node/collection'

@@ -1,10 +1,11 @@
 require 'spec_helper'
 
-class Katte::Plugins
+module Katte::Plugins
   describe Output do
     before :all do
       klasses = 2.times.map {|i|
-        Class.new(Katte::Plugins::Output) {|klass|
+        Class.new {|klass|
+          include Katte::Plugins::Output
           name :"test_#{i}"
           attr_reader :result
           def out(node, data)
@@ -17,7 +18,7 @@ class Katte::Plugins
     end
 
     it "puts to all output plugins" do
-      node = Katte::Node.new(output: @plugins)
+      node = Katte::Recipe::Node.new(output: @plugins)
       node.open {|out, err|
         out.puts "a"
       }
